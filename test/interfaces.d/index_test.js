@@ -22,7 +22,7 @@ describe('interfaces.d/index.js', () => {
       cb()
     })
     interfaces_d = proxyquire('../../src/interfaces.d/index.js', {
-      'ensure-dir': ensureDir,
+      'make-dir': ensureDir,
       fs,
       './templates.js': templates
     })

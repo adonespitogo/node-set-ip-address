@@ -1,6 +1,6 @@
 {
   "name": "set-ip-address",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node module for setting up network interface(s) ip address.",
   "main": "src/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
-    "ensure-dir": "^0.1.0",
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "make-dir": "^3.0.0"
   }
 }

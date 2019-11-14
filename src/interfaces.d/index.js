@@ -2,7 +2,7 @@
 
 var util = require('util')
 var fs = require('fs')
-var ensureDir = require('ensure-dir')
+var ensureDir = require('make-dir')
 var writeFile = util.promisify(fs.writeFile)
 var templates = require('./templates.js')
 

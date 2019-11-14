@@ -30,7 +30,7 @@ describe('netplan', () => {
     }
     netplan = proxyquire('../../src/netplan/index.js', {
       fs,
-      'ensure-dir': ensureDir,
+      'make-dir': ensureDir,
       'js-yaml': yaml,
       './config': config
     })

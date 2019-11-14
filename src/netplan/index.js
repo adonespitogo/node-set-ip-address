@@ -6,7 +6,7 @@ var config = require('./config.js')
 var util = require('util')
 var readdir = util.promisify(fs.readdir)
 var writeFile = util.promisify(fs.writeFile)
-var ensureDir = require('ensure-dir')
+var ensureDir = require('make-dir')
 
 exports.cfg_stack = {
   network: {
