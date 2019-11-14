@@ -31,6 +31,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
+    "ensure-dir": "^0.1.0",
     "js-yaml": "^3.13.1"
   }
 }
