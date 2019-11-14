@@ -20,7 +20,12 @@ var eth0 = {
   nameservers: ['8.8.8.8']
 }
 
-set_ip_address.configure([eth0]).then(() => console.log('done writing config files')
+var eth1 {
+  interface: 'eth1',
+  dhcp: true
+}
+
+set_ip_address.configure([eth0, eth1]).then(() => console.log('done writing config files')
 
 ```
 
