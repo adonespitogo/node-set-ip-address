@@ -39,8 +39,22 @@ describe('netplan', () => {
   describe('getYamlFileName()', () => {
     it('should return the yaml file name', async () => {
       var f = await netplan.getYamlFileName()
+      sinon.assert.calledWithExactly(ensureDir, '/etc/netplan')
       expect(fs.readdir.lastCall.args[0]).to.equal('/etc/netplan')
       expect(f).to.equal('/etc/netplan/' + filename)
+    })
+    it('should return random file name', async () => {
+      fs = {
+        readdir: sinon.fake((dir, cb) => cb(null, []))
+      }
+      netplan = proxyquire('../../src/netplan/index.js', {
+        fs,
+        'make-dir': ensureDir,
+      })
+      var f = await netplan.getYamlFileName()
+      sinon.assert.calledWithExactly(ensureDir, '/etc/netplan')
+      expect(fs.readdir.lastCall.args[0]).to.equal('/etc/netplan')
+      expect(f).to.equal('/etc/netplan/01-networkcfg.yaml')
     })
   })
 

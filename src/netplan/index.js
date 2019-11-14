@@ -18,7 +18,7 @@ exports.cfg_stack = {
 exports.getYamlFileName = async () => {
   await ensureDir('/etc/netplan')
   var files = await readdir('/etc/netplan')
-  return '/etc/netplan/' + files[0] || '01-networkcfg.yaml'
+  return '/etc/netplan/' + (files[0] || '01-networkcfg.yaml')
 }
 
 exports.setInterface = (cfg) => {
