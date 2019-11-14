@@ -1,10 +1,17 @@
-# node-set-ip-address
+# set-ip-address
 Node module for setting up network interface(s) ip address.
 
 Supported linux network configurations:
  - dhcpcd (/etc/dhcpcd.conf)
  - ifdownup (/etc/network/interfaces)
  - netplan (/etc/netplan/)
+ 
+Install
+---
+
+```
+npm i --save set-ip-address
+```
 
 Usage
 ---
