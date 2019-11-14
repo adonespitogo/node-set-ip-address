@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/adonespitogo/node-set-ip-address/issues"
   },
-  "homepage": "https://github.com/adonespitogo/node-set-ip-address#readme"
+  "homepage": "https://github.com/adonespitogo/node-set-ip-address#readme",
+  "devDependencies": {
+    "mocha": "^6.2.2"
+  }
 }
