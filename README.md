@@ -23,3 +23,12 @@ var eth0 = {
 set_ip_address.configure([eth0]).then(() => console.log('done writing config files')
 
 ```
+
+TODO:
+---
+ - validate config input
+
+LICENSE
+---
+
+[MIT](LICENSE)
