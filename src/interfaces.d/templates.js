@@ -1,5 +1,5 @@
 exports.static = `
-auto  [INTERFACE],
+auto  [INTERFACE]
 iface  [INTERFACE]  inet  static
   address  [ADDRESS]/[PREFIX]
   [GATEWAY]
