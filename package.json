@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/adonespitogo/node-set-ip-address#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
     "mocha": "^6.2.2"
   }
 }
