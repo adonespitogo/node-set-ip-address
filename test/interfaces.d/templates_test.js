@@ -2,6 +2,7 @@
 
 var { expect } = require('chai')
 var templates = require('../../src/interfaces.d/templates.js')
+var sinon = require('sinon')
 
 describe('interfaces.d/templates.js', () => {
 
@@ -38,6 +39,33 @@ describe('interfaces.d/templates.js', () => {
       }
       var expected_output = require('./templates/dhcp_format.js')
       expect(templates.dhcpFormat(config)).to.equal(expected_output.trim())
+    })
+  })
+
+  describe('format()', () => {
+    it('should call staticFormat()', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1'
+      }
+      var expected_output = 'some result'
+      var static_stub = sinon.stub(templates, 'staticFormat').returns(expected_output)
+      var res = templates.format(config)
+      expect(res).to.equal(expected_output)
+      sinon.assert.calledWithExactly(static_stub, config)
+      static_stub.restore()
+    })
+    it('should call dhcpFormat()', () => {
+      var config = {
+        interface: 'eth0',
+        dhcp: true
+      }
+      var expected_output = 'some result'
+      var dhcp_stub = sinon.stub(templates, 'dhcpFormat').returns(expected_output)
+      var res = templates.format(config)
+      expect(res).to.equal(expected_output)
+      sinon.assert.calledWithExactly(dhcp_stub, config)
+      dhcp_stub.restore()
     })
   })
 

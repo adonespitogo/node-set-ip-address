@@ -23,3 +23,9 @@ exports.dhcpFormat = (config) => {
     .replace(/\[INTERFACE\]/g, config.interface)
     .trim()
 }
+
+exports.format = (config) => {
+  return config.dhcp
+    ? exports.dhcpFormat(config)
+    : exports.staticFormat(config)
+}
