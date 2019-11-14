@@ -65,7 +65,7 @@ describe('netplan', () => {
       netplan.getYamlFileName.restore()
     })
 
-    it('should write config to /etc/plan', async () => {
+    it('should write config to /etc/netplan', async () => {
       await netplan.writeConfig()
       sinon.assert.calledWithExactly(yaml.safeDump, netplan.cfg_stack, {noCompatMode: true})
       expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/netplan/' + filename)
