@@ -1,6 +1,8 @@
 # set-ip-address
 Node module for setting up network interface(s) ip address.
 
+[![Build Status](https://travis-ci.com/adonespitogo/node-set-ip-address.svg?branch=master)](https://travis-ci.com/adonespitogo/node-set-ip-address)
+
 Supported linux network configurations:
  - dhcpcd (/etc/dhcpcd.conf)
  - ifdownup (/etc/network/interfaces)
