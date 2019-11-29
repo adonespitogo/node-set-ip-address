@@ -13,7 +13,7 @@ Install
 npm i --save set-ip-address
 ```
 
-Usage
+Basic Usage
 ---
 
 ```js
