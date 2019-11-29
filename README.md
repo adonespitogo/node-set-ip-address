@@ -39,6 +39,8 @@ set_ip_address.configure([eth0, eth1]).then(() => console.log('done writing conf
 Configure VLAN
 ---
 
+You can create vlan interface by passing `vlanid` option.
+
 ```js
 var set_ip_address = require('set-ip-address')
 
