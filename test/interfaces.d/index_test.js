@@ -41,6 +41,15 @@ describe('interfaces.d/index.js', () => {
     expect(fs.writeFile.lastCall.args[1]).to.equal(config_str)
   })
 
+  it('should write config file for vlan interface', async () => {
+    var cfg = {ip_address: '10.0.0.1', interface: 'eth0', vlanid: 10}
+    await interfaces_d.setInterface(cfg)
+    sinon.assert.calledWithExactly(templates.format, cfg)
+    sinon.assert.calledWithExactly(ensureDir, '/etc/network/interfaces.d')
+    expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/network/interfaces.d/eth0.10')
+    expect(fs.writeFile.lastCall.args[1]).to.equal(config_str)
+  })
+
   it('should accept array params and write config', async () => {
     var set_interface_stub = sinon.stub(interfaces_d, 'setInterface').resolves()
     var eth0 = {interface: 'eth0'}

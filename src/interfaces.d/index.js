@@ -9,7 +9,7 @@ var templates = require('./templates.js')
 exports.setInterface = async (config) => {
   var iface = config.interface
   var config_str = templates.format(config)
-  var file = `/etc/network/interfaces.d/${iface}`
+  var file = `/etc/network/interfaces.d/${config.vlanid ? `${config.interface}.${config.vlanid}` : config.interface}`
   await ensureDir('/etc/network/interfaces.d')
   return writeFile(file, config_str)
 }
