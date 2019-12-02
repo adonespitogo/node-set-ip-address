@@ -7,12 +7,6 @@ Supported linux network configurations:
  - dhcpcd (/etc/dhcpcd.conf)
  - ifdownup (/etc/network/interfaces)
  - netplan (/etc/netplan/)
-
-Note: Make sure to load `8021q` module first:
-
-```
-sudo modprobe 8021q
-```
  
 Install
 ---
@@ -47,7 +41,11 @@ set_ip_address.configure([eth0, eth1]).then(() => console.log('done writing conf
 Configure VLAN
 ---
 
-You can create vlan interface by passing `vlanid` option.
+You can create vlan interface by passing `vlanid` option. Make sure to load `8021q` module to the kernel:
+
+```
+sudo modprobe 8021q
+```
 
 ```js
 var set_ip_address = require('set-ip-address')
