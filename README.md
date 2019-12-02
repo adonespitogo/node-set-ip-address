@@ -7,6 +7,12 @@ Supported linux network configurations:
  - dhcpcd (/etc/dhcpcd.conf)
  - ifdownup (/etc/network/interfaces)
  - netplan (/etc/netplan/)
+
+Note: Make sure to load `8021q` module first:
+
+```
+sudo modprobe 8021q
+```
  
 Install
 ---
