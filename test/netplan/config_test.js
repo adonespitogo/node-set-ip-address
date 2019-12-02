@@ -96,6 +96,22 @@ describe('netplan', () => {
 
   describe('VLAN support', () => {
 
+    it('should create vlan with dynamic address', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 10,
+        dhcp:  true
+      }
+      var expected_vlans = {
+        'eth0.10': {
+          id: 10,
+          link: 'eth0',
+          dhcp4: true
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
     it('should create vlan interface with no gateway and nameservers', () => {
       var config = {
         interface: 'eth0',
