@@ -83,9 +83,6 @@ describe('index.js', () => {
 
     it('should resolve if one service is ok', (done) => {
       var error = 'some error'
-      var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
-      var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
-      var configs = [eth0, eth1]
       set_ip_address.restartService()
         .then(() => done())
         .catch(e => done(e))
@@ -103,9 +100,6 @@ describe('index.js', () => {
 
     it('should reject if all service failed', (done) => {
       var error = 'some error'
-      var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
-      var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
-      var configs = [eth0, eth1]
       set_ip_address.restartService()
         .then(() => done())
         .catch(e => {
