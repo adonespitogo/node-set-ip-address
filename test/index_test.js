@@ -86,6 +86,11 @@ describe('index.js', () => {
     it('should resolve if one service is ok', (done) => {
       var error = 'some error'
       set_ip_address.restartService()
+        .then(() => {
+          expect(exec.firstCall.args[0]).to.equal('service networking restart')
+          expect(exec.secondCall.args[0]).to.equal('netplan try')
+          expect(exec.thirdCall.args[0]).to.equal('netplan apply')
+        })
         .then(() => done())
         .catch(e => done(e))
       exec_cbs.forEach((cb, i) => {

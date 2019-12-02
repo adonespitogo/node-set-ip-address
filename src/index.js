@@ -30,7 +30,7 @@ exports.restartService = async () => {
       console.log(e)
       error = e
     })
-  var netplan_restart = execPromise('netplay try')
+  var netplan_restart = execPromise('netplan try')
     .then(() => execPromise('netplan apply'))
     .then(() => network_service_restarted = true)
     .catch(e => {
