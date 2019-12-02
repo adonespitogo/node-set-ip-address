@@ -29,11 +29,14 @@ exports.writeConfig = async () => {
   var cfg_yaml = yaml.safeDump(exports.cfg_stack, {noCompatMode: true})
   var filename = await exports.getYamlFileName()
   await ensureDir('/etc/netplan')
-  return writeFile(filename, cfg_yaml) 
+  return writeFile(filename, cfg_yaml)
 }
 
 exports.configure = (configs) => {
-  configs.forEach(c => exports.setInterface(c))
+  configs.forEach(c => {
+    var cfg = Object.assign({}, c)
+    return exports.setInterface(cfg)
+  })
   return exports.writeConfig()
 }
 

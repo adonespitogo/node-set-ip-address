@@ -22,5 +22,5 @@ exports.setInterface = async (config) => {
 }
 
 exports.configure = async (configs) => {
-  return promiseSeries(configs.map(c => () => exports.setInterface(c)))
+  return promiseSeries(configs.map(c => () => exports.setInterface(Object.assign({}, c))))
 }
