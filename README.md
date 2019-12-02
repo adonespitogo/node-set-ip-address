@@ -80,6 +80,7 @@ set_ip_address
 TODO:
 ---
  - validate config input
+ - restart network interfaces after config change
 
 LICENSE
 ---
