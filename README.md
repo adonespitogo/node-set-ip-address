@@ -75,7 +75,7 @@ set_ip_address
 
   // NOTE:
   // eth0.10 vlan interface configuration will be
-  // created in /etc/network/interfaces.d/eth0.10
+  // created in /etc/network/interfaces.d/eth0
   // and in /etc/netplan/whatever-your-conguration-file.yml
 ```
 
