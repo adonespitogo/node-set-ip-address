@@ -103,15 +103,24 @@ describe('netplan', () => {
       write_stub.restore()
     })
     it('should accept array arg', async () => {
+      netplan.cfg_stack = {
+        network: {
+          ethernets: ['some config'],
+          vlans: ['some vlans']
+        }
+      }
       var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
       var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
       var configs = [eth0, eth1]
       await netplan.configure(configs)
       expect(set_interface_stub.firstCall.args).to.eql([eth0])
       expect(set_interface_stub.lastCall.args).to.eql([eth1])
+      expect(netplan.cfg_stack.network.ethernets).to.eql({})
+      expect(netplan.cfg_stack.network.vlans).to.eql({})
       sinon.assert.calledOnce(write_stub)
       sinon.assert.callOrder(set_interface_stub, write_stub)
     })
+
   })
 
 })
