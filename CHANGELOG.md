@@ -1,3 +1,6 @@
+v0.1.3
+---
+  - fix netplan vlan config not removed
 
 v0.1.2
 ---
