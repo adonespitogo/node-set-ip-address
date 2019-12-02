@@ -57,9 +57,9 @@ var eth0 = {
 var vlan1 {
   interface: 'eth0',
   vlanid: 10,
-  ip_address: '10.0.0.1',
+  ip_address: '20.0.0.1',
   prefix: 20,
-  gateway: '10.0.0.1',
+  gateway: '20.0.0.1',
   nameservers: ['8.8.8.8']
 }
 
