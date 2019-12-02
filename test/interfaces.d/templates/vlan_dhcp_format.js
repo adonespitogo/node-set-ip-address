@@ -1,6 +1,6 @@
 module.exports = `
-auto  eth0.10
-allow-hotplug  eth0.10
-iface  eth0.10  inet  dhcp
+auto  eth0.0
+allow-hotplug  eth0.0
+iface  eth0.0  inet  dhcp
   vlan-raw-device eth0
 `

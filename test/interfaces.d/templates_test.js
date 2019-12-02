@@ -34,7 +34,7 @@ describe('interfaces.d/templates.js', () => {
         var config = {
           interface: 'eth0',
           ip_address: '10.0.0.1',
-          vlanid: 10,
+          vlanid: 0,
           prefix: 20
         }
         var expected_output = require('./templates/vlan_static_ip_wo_gateway.js')
@@ -70,7 +70,7 @@ describe('interfaces.d/templates.js', () => {
         var config = {
           interface: 'eth0',
           dhcp: true,
-          vlanid: 10
+          vlanid: 0
         }
         var expected_output = require('./templates/vlan_dhcp_format.js')
         expect(templates.dhcpFormat(config)).to.equal(expected_output.trim())
