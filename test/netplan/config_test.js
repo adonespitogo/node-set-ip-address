@@ -99,12 +99,12 @@ describe('netplan', () => {
     it('should create vlan with dynamic address', () => {
       var config = {
         interface: 'eth0',
-        vlanid: 10,
+        vlanid: 0,
         dhcp:  true
       }
       var expected_vlans = {
-        'eth0.10': {
-          id: 10,
+        'eth0.0': {
+          id: 0,
           link: 'eth0',
           dhcp4: true
         }
@@ -115,13 +115,13 @@ describe('netplan', () => {
     it('should create vlan interface with no gateway and nameservers', () => {
       var config = {
         interface: 'eth0',
-        vlanid: 10,
+        vlanid: 0,
         ip_address: '20.0.0.1',
         prefix: 20
       }
       var expected_vlans = {
-        'eth0.10': {
-          id: 10,
+        'eth0.0': {
+          id: 0,
           link: 'eth0',
           dhcp4: false,
           dhcp6: false,

@@ -2,6 +2,7 @@
 
 exports.generate = (currentConfig, interfaceConfig) => {
   var iface = interfaceConfig.interface
+  var is_vlan = typeof interfaceConfig.vlanid == 'number'
   var cfg = {
     network: {
       version: 2,
@@ -22,7 +23,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
   } else {
     config.dhcp4 = true
   }
-  if (!interfaceConfig.vlanid)
+  if (!is_vlan)
     cfg.network.ethernets[iface] = config
   else {
     config.id = interfaceConfig.vlanid

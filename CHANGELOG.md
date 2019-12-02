@@ -1,3 +1,7 @@
+v0.1.4
+---
+  - accept zero vlan tag/id
+
 v0.1.3
 ---
   - fix netplan vlan config not removed

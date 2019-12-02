@@ -1,6 +1,6 @@
 module.exports = `
-auto  eth0.10
-iface  eth0.10  inet  static
+auto  eth0.0
+iface  eth0.0  inet  static
   address  10.0.0.1/20
   vlan-raw-device eth0
 `
