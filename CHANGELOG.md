@@ -1,3 +1,7 @@
+v0.1.1
+---
+  - restart networking service after config change
+
 v0.1.0
 ---
   - support for vlan interface
