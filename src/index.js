@@ -17,8 +17,6 @@ exports.configure = async (configs) => {
     netplan.configure(configs)
   ])
 
-  return exports.restartService()
-
 }
 
 exports.restartService = async () => {

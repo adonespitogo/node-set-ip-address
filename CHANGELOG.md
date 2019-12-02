@@ -1,3 +1,7 @@
+v0.1.5
+---
+  - optional network restart
+
 v0.1.4
 ---
   - accept zero vlan tag/id
