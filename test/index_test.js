@@ -57,26 +57,24 @@ describe('index.js', () => {
         {interface: 'eth0', vlanid: 10},
         {interface: 'eth1', vlanid: 10},
       ]
-      var res = await set_ip_address.configure(configs)
-      expect(res).to.equal(restart_result)
+      await set_ip_address.configure(configs)
       sinon.assert.calledWithExactly(dhcpcd.configure, expected_configs)
       sinon.assert.calledWithExactly(interfaces_d.configure, expected_configs)
       sinon.assert.calledWithExactly(netplan.configure, expected_configs)
-      sinon.assert.calledOnce(restart_stub)
-      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure, restart_stub)
+      sinon.assert.notCalled(restart_stub)
+      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure)
     })
 
     it('should call .configure for all modules for all (dhcpcd, interfaces.d and netplan)', async () => {
       var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
       var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
       var configs = [eth0, eth1]
-      var res = await set_ip_address.configure(configs)
-      expect(res).to.equal(restart_result)
+      await set_ip_address.configure(configs)
       sinon.assert.calledWithExactly(dhcpcd.configure, configs)
       sinon.assert.calledWithExactly(interfaces_d.configure, configs)
       sinon.assert.calledWithExactly(netplan.configure, configs)
-      sinon.assert.calledOnce(restart_stub)
-      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure, restart_stub)
+      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure)
+      sinon.assert.notCalled(restart_stub)
     })
 
   })

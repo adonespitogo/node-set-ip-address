@@ -77,6 +77,14 @@ set_ip_address
   // and in /etc/netplan/whatever-your-conguration-file.yml
 ```
 
+Restart Networking Service
+---
+
+```js
+set_ip_address.restartService()
+  .then(() => console.log('network service restarted'))
+```
+
 TODO:
 ---
  - validate config input
@@ -85,3 +93,4 @@ LICENSE
 ---
 
 [MIT](LICENSE)
+
