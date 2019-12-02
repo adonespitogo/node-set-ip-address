@@ -15,7 +15,7 @@ exports.setInterface = async (config) => {
   await ensureDir('/etc/network/interfaces.d')
   if (config.vlanid) {
     var content = await readFile(file, 'utf8')
-    return writeFile(file, content + '\n' + config_str)
+    return writeFile(file, content + '\n\n\n' + config_str)
   }
   else
     return writeFile(file, config_str)

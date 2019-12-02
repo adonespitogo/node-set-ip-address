@@ -64,7 +64,7 @@ describe('interfaces.d/index.js', () => {
       sinon.assert.calledWithExactly(templates.format, cfg)
       sinon.assert.calledWithExactly(ensureDir, '/etc/network/interfaces.d')
       expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/network/interfaces.d/eth0')
-      expect(fs.writeFile.lastCall.args[1]).to.equal(eth0_content + '\n' + config_str)
+      expect(fs.writeFile.lastCall.args[1]).to.equal(eth0_content + '\n\n\n' + config_str)
     })
 
   })
