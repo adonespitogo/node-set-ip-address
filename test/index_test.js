@@ -63,6 +63,7 @@ describe('index.js', () => {
       sinon.assert.calledWithExactly(interfaces_d.configure, expected_configs)
       sinon.assert.calledWithExactly(netplan.configure, expected_configs)
       sinon.assert.calledOnce(restart_stub)
+      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure, restart_stub)
     })
 
     it('should call .configure for all modules for all (dhcpcd, interfaces.d and netplan)', async () => {
@@ -75,6 +76,7 @@ describe('index.js', () => {
       sinon.assert.calledWithExactly(interfaces_d.configure, configs)
       sinon.assert.calledWithExactly(netplan.configure, configs)
       sinon.assert.calledOnce(restart_stub)
+      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure, restart_stub)
     })
 
   })
