@@ -10,28 +10,24 @@ exports.generate = (currentConfig, interfaceConfig) => {
       vlans: currentConfig.network.vlans || {}
     }
   }
-  if (interfaceConfig.ip_address) {
-    interfaceConfig.dhcp4 = false
-    interfaceConfig.dhcp6 = false
-    interfaceConfig.addresses = [interfaceConfig.ip_address + '/' + interfaceConfig.prefix]
+  var config = {}
+  if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
+    config.dhcp4 = false
+    config.dhcp6 = false
+    config.addresses = [interfaceConfig.ip_address + '/' + interfaceConfig.prefix]
     if (interfaceConfig.nameservers)
-      interfaceConfig.nameservers = {addresses: interfaceConfig.nameservers}
+      config.nameservers = {addresses: interfaceConfig.nameservers}
     if (interfaceConfig.gateway)
-      interfaceConfig.gateway4 = interfaceConfig.gateway
-    delete interfaceConfig.gateway
-    delete interfaceConfig.interface
-    delete interfaceConfig.ip_address
-    delete interfaceConfig.prefix
+      config.gateway4 = interfaceConfig.gateway
   } else {
-    interfaceConfig = {dhcp4: true}
+    config.dhcp4 = true
   }
   if (!interfaceConfig.vlanid)
-    cfg.network.ethernets[iface] = interfaceConfig
+    cfg.network.ethernets[iface] = config
   else {
-    interfaceConfig.id = interfaceConfig.vlanid
-    interfaceConfig.link = iface
-    delete interfaceConfig.vlanid
-    cfg.network.vlans[`${iface}.${interfaceConfig.id}`] = interfaceConfig
+    config.id = interfaceConfig.vlanid
+    config.link = iface
+    cfg.network.vlans[`${iface}.${config.id}`] = config
   }
   return cfg
 }
