@@ -1,3 +1,8 @@
+
+v0.1.2
+---
+  - fix netplan vlan feature
+
 v0.1.1
 ---
   - restart networking service after config change
