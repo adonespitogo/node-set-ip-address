@@ -92,7 +92,7 @@ exports.generateConfig = (configs) => {
   var result = ''
   configs.forEach(c => {
     if (!c.dhcp)
-      result += `\n\n${exports.generateStatic(c).trim()}`
+      result += `\n\n${exports.generateStatic(Object.assign({}, c)).trim()}`
   })
   return exports.main.trim() + result
 }

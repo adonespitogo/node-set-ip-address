@@ -94,6 +94,75 @@ describe('netplan', () => {
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
   })
 
+  describe('VLAN support', () => {
+
+    it('should create vlan interface with no gateway and nameservers', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 10,
+        ip_address: '20.0.0.1',
+        prefix: 20
+      }
+      var expected_vlans = {
+        'eth0.10': {
+          id: 10,
+          link: 'eth0',
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ['20.0.0.1/20']
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
+    it('should create vlan interface with gateway and no nameservers', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 10,
+        ip_address: '20.0.0.1',
+        prefix: 20,
+        gateway: '20.0.0.1'
+      }
+      var expected_vlans = {
+        'eth0.10': {
+          id: 10,
+          link: 'eth0',
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ['20.0.0.1/20'],
+          gateway4: '20.0.0.1'
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
+    it('should create vlan interface with gateway nameservers', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 10,
+        ip_address: '20.0.0.1',
+        prefix: 20,
+        gateway: '20.0.0.1',
+        nameservers: ['1.1.1.1']
+      }
+      var expected_vlans = {
+        'eth0.10': {
+          id: 10,
+          link: 'eth0',
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ['20.0.0.1/20'],
+          gateway4: '20.0.0.1',
+          nameservers: {
+            addresses: ['1.1.1.1']
+          }
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
+
+  })
 
 })
 

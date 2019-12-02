@@ -24,6 +24,26 @@ describe('src/index.js', () => {
     })
   })
 
+  it('should order configs, physical interface first then vlans', async () => {
+    var configs = [
+      {interface: 'eth0'},
+      {interface: 'eth0', vlanid: 10},
+      {interface: 'eth1'},
+      {interface: 'eth1', vlanid: 10},
+    ]
+    var expected_configs = [
+      {interface: 'eth0'},
+      {interface: 'eth1'},
+      {interface: 'eth0', vlanid: 10},
+      {interface: 'eth1', vlanid: 10},
+    ]
+    await set_ip_address.configure(configs)
+    sinon.assert.calledWithExactly(dhcpcd.configure, expected_configs)
+    sinon.assert.calledWithExactly(interfaces_d.configure, expected_configs)
+    sinon.assert.calledWithExactly(netplan.configure, expected_configs)
+
+  })
+
   it('should call .configure for all modules for all (dhcpcd, interfaces.d and netplan)', async () => {
     var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
     var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
