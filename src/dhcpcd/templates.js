@@ -73,7 +73,6 @@ exports.generateStatic = (config) => {
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
 
-
   config.nameservers = config.nameservers || []
   if (config.nameservers.length) {
     var dns = ''
@@ -91,7 +90,8 @@ exports.generateStatic = (config) => {
 exports.generateConfig = (configs) => {
   var result = ''
   configs.forEach(c => {
-    if (!c.dhcp)
+    var is_vlan = typeof c.vlanid == 'number'
+    if (!c.dhcp && !is_vlan)
       result += `\n\n${exports.generateStatic(Object.assign({}, c)).trim()}`
   })
   return exports.main.trim() + result

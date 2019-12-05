@@ -59,6 +59,14 @@ static domain_name_servers=10.0.0.1 8.8.8.8
           nameservers: ['8.8.8.8']
         },
         {
+          interface: 'eth1',
+          vlanid: 0,
+          ip_address: '20.0.0.2',
+          prefix: 20,
+          gateway: '20.0.0.2',
+          nameservers: ['8.8.8.8']
+        },
+        {
           interface: 'wlan0',
           dhcp: true
         }

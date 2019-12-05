@@ -1,3 +1,7 @@
+v0.1.6
+---
+  - fix extra ip address added to interface when it has vlan
+
 v0.1.5
 ---
   - optional network restart
