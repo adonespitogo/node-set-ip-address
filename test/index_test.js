@@ -65,11 +65,41 @@ describe('index.js', () => {
       sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure)
     })
 
+    it('should reject if one interface contains same vlan id', async () => {
+      var configs = [
+        {interface: 'eth0'},
+        {interface: 'eth0', vlanid: 10},
+        {interface: 'eth1'},
+        {interface: 'eth0', vlanid: 10},
+      ]
+      try {
+        await set_ip_address.configure(configs)
+        expect.fail()
+      } catch(e) {
+        expect(e.message).to.equal("Can't have same VLAN ID on interface eth0")
+        sinon.assert.notCalled(dhcpcd.configure)
+        sinon.assert.notCalled(interfaces_d.configure)
+        sinon.assert.notCalled(netplan.configure)
+        sinon.assert.notCalled(restart_stub)
+      }
+    })
+
     it('should call .configure for all modules for all (dhcpcd, interfaces.d and netplan)', async () => {
       var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
       var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
       var configs = [eth0, eth1]
       await set_ip_address.configure(configs)
+      sinon.assert.calledWithExactly(dhcpcd.configure, configs)
+      sinon.assert.calledWithExactly(interfaces_d.configure, configs)
+      sinon.assert.calledWithExactly(netplan.configure, configs)
+      sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure)
+      sinon.assert.notCalled(restart_stub)
+    })
+
+    it('should accept single config object', async () => {
+      var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
+      var configs = [eth0]
+      await set_ip_address.configure(eth0)
       sinon.assert.calledWithExactly(dhcpcd.configure, configs)
       sinon.assert.calledWithExactly(interfaces_d.configure, configs)
       sinon.assert.calledWithExactly(netplan.configure, configs)
