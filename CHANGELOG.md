@@ -1,6 +1,7 @@
 v0.1.7
 ---
   - vlan validation - must not have the same vlan id on same interface
+  - accept object param for single interface configuration
 
 v0.1.6
 ---
