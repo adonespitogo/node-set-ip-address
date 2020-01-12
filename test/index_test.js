@@ -31,6 +31,14 @@ describe('index.js', () => {
     })
   })
 
+  describe('index.js', () => {
+    it('should equal src/index.js', () => {
+      var index_src = require('../src/index.js')
+      var index = require('../index.js')
+      expect(index_src).to.eql(index)
+    })
+  })
+
   describe('configure()', () => {
 
     var restart_stub
