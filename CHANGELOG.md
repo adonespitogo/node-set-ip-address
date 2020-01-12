@@ -1,3 +1,7 @@
+v0.2.0
+---
+  - added ./index.js as main file
+
 v0.1.7
 ---
   - vlan validation - must not have the same vlan id on same interface
