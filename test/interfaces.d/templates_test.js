@@ -97,7 +97,7 @@ describe('interfaces.d/templates.js', () => {
         vlanid: 10,
         manual: true
       }
-      var expected_output = 'iface eth0.10 inet manual'
+      var expected_output = 'iface eth0.10 inet manual\n  vlan-raw-device eth0'
       expect(templates.manualFormat(config)).to.equal(expected_output.trim())
     })
 

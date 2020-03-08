@@ -35,10 +35,15 @@ exports.dhcpFormat = (config) => {
 }
 
 exports.manualFormat = config => {
-  var iface = typeof config.vlanid == 'number'
+  var is_vlan = typeof config.vlanid == 'number'
+  var iface = is_vlan
     ? `${config.interface}.${config.vlanid}`
     : config.interface
-  return `iface ${iface} inet manual`
+
+  var ret = `iface ${iface} inet manual`
+  return is_vlan
+    ? ret + '\n  vlan-raw-device ' + config.interface
+    : ret
 }
 
 exports.format = (config) => {
