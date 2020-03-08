@@ -113,10 +113,6 @@ set_ip_address.restartService()
   .then(() => console.log('network service restarted'))
 ```
 
-TODO:
----
- - validate config input
-
 LICENSE
 ---
 
