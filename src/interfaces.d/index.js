@@ -32,7 +32,12 @@ exports.configure = async (configs) => {
   return promiseSeries(configs.map(cfg => {
     var c = Object.assign({}, cfg)
     return async () => {
-      if (bridge_ports.includes(cfg.interface))
+
+      var iface = typeof cfg.vlanid == 'number'
+        ? `${cfg.interface}.${cfg.vlanid}`
+        : cfg.interface
+
+      if (bridge_ports.includes(iface))
         await exports.setInterface(Object.assign(c, {dhcp: false, manual: true}))
       else
         await exports.setInterface(c)

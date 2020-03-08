@@ -67,18 +67,17 @@ describe('interfaces.d/index.js', () => {
     it('should accept array params and write config', async () => {
       var set_interface_stub = sinon.stub(interfaces_d, 'setInterface').resolves()
       var eth0 = {interface: 'eth0', dhcp: true}
+      var vlan = {interface: 'eth0', dhcp: true, vlanid: 10}
       var eth1 = {interface: 'eth1', dhcp: true}
       var eth2 = {interface: 'eth2', dhcp: true}
       var eth3 = {interface: 'eth3', dhcp: true}
-      var br0 = {interface: 'br0', dhcp: true, bridge_ports: ['eth2', 'eth3']}
-      var configs = [eth0, eth1, eth2, eth3, br0]
+      var br0 = {interface: 'br0', dhcp: true, bridge_ports: ['eth0.10', 'eth2', 'eth3']}
+      var configs = [eth0, eth1, eth2, eth3, vlan, br0]
       var ret = interfaces_d.configure(configs)
       await Promise.resolve()
 
       expect(fs.writeFile.firstCall.args[0]).to.equal('/etc/network/interfaces')
       expect(fs.writeFile.firstCall.args[1]).to.equal(templates.main)
-
-      expect(configure_fns).to.have.lengthOf(5)
 
       configure_fns[0]()
       expect(set_interface_stub.lastCall.args).to.eql([eth0])
@@ -89,6 +88,8 @@ describe('interfaces.d/index.js', () => {
       configure_fns[3]()
       expect(set_interface_stub.lastCall.args).to.eql([Object.assign(eth3, {manual: true, dhcp: false})])
       configure_fns[4]()
+      expect(set_interface_stub.lastCall.args).to.eql([Object.assign(vlan, {manual: true, dhcp: false})])
+      configure_fns[5]()
       expect(set_interface_stub.lastCall.args).to.eql([br0])
       configure_resolve()
       set_interface_stub.restore()
