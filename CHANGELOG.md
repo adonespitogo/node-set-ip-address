@@ -1,3 +1,7 @@
+v0.2.1
+---
+  - Support for bridge interfaces
+
 v0.2.0
 ---
   - added ./index.js as main file

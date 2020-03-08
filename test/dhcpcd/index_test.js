@@ -28,6 +28,7 @@ describe('dhcpcd', () => {
   })
 
   describe('configure()', () => {
+
     it('should write config', async () => {
       var cfg = 'my config'
       await dhcpcd.configure(cfg)
@@ -35,6 +36,7 @@ describe('dhcpcd', () => {
       expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/dhcpcd.conf')
       expect(fs.writeFile.lastCall.args[1]).to.equal(config)
     })
+
   })
 
 })
