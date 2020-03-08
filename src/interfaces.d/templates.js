@@ -17,8 +17,12 @@ iface  [INTERFACE]  inet  dhcp
 `
 exports.staticFormat = (config) => {
   var is_vlan = typeof config.vlanid == 'number'
+  var ifname = is_vlan
+    ? config.ifname
+    : config.interface
+
   return exports.static
-    .replace(/\[INTERFACE\]/g, is_vlan? `${config.interface}.${config.vlanid}` : config.interface)
+    .replace(/\[INTERFACE\]/g, ifname)
     .replace(/\[ADDRESS\]/, config.ip_address)
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? `  gateway  ${config.gateway}\n`: '')
@@ -28,8 +32,11 @@ exports.staticFormat = (config) => {
 
 exports.dhcpFormat = (config) => {
   var is_vlan = typeof config.vlanid == 'number'
+  var ifname = is_vlan
+    ? config.ifname
+    : config.interface
   return exports.dhcp
-    .replace(/\[INTERFACE\]/g, is_vlan? `${config.interface}.${config.vlanid}` : config.interface)
+    .replace(/\[INTERFACE\]/g, ifname)
     .replace(/\[VLAN\]/, is_vlan? `  vlan-raw-device ${config.interface}` : '')
     .trim()
 }
@@ -37,7 +44,7 @@ exports.dhcpFormat = (config) => {
 exports.manualFormat = config => {
   var is_vlan = typeof config.vlanid == 'number'
   var iface = is_vlan
-    ? `${config.interface}.${config.vlanid}`
+    ? config.ifname 
     : config.interface
 
   var ret = `iface ${iface} inet manual`

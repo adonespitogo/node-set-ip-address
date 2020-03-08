@@ -99,6 +99,7 @@ describe('netplan', () => {
 
     it('should create vlan with dynamic address', () => {
       var config = {
+        ifname: 'eth0.0',
         interface: 'eth0',
         vlanid: 0,
         dhcp:  true
@@ -116,6 +117,7 @@ describe('netplan', () => {
 
     it('should create vlan interface with no gateway and nameservers', () => {
       var config = {
+        ifname: 'eth0.0',
         interface: 'eth0',
         vlanid: 0,
         ip_address: '20.0.0.1',
@@ -135,6 +137,7 @@ describe('netplan', () => {
 
     it('should create vlan interface with gateway and no nameservers', () => {
       var config = {
+        ifname: 'eth0.10',
         interface: 'eth0',
         vlanid: 10,
         ip_address: '20.0.0.1',
@@ -156,6 +159,7 @@ describe('netplan', () => {
 
     it('should create vlan interface with gateway nameservers', () => {
       var config = {
+        ifname: 'eth0.x',
         interface: 'eth0',
         vlanid: 10,
         ip_address: '20.0.0.1',
@@ -164,7 +168,7 @@ describe('netplan', () => {
         nameservers: ['1.1.1.1']
       }
       var expected_vlans = {
-        'eth0.10': {
+        'eth0.x': {
           id: 10,
           link: 'eth0',
           dhcp4: false,
