@@ -55,7 +55,7 @@ describe('interfaces.d/index.js', () => {
       expect(fs.readFile.lastCall.args[1]).to.equal('utf8')
 
       expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/network/interfaces')
-      expect(fs.writeFile.lastCall.args[1]).to.equal(templates.main + '\n\n' + config_str)
+      expect(fs.writeFile.lastCall.args[1]).to.equal(templates.main + '\n\n' + config_str + '\n')
 
       sinon.assert.calledWithExactly(templates.format, cfg)
     })

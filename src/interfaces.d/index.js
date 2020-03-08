@@ -12,7 +12,7 @@ exports.setInterface = async (config) => {
   var iface = config.interface
   var config_str = templates.format(config)
   var content = await readFile(file, 'utf8')
-  await writeFile(file, content + '\n\n' + config_str)
+  await writeFile(file, content + '\n\n' + config_str + '\n')
 }
 
 exports.configure = async (configs) => {
