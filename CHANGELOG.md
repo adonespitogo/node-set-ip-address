@@ -1,6 +1,8 @@
-v0.2.1
+v1.0.0
 ---
   - Support for bridge interfaces
+  - Breaking changes:
+    * Interface configs are no longer saved in individual files under `/etc/network/interfaces.d/`. Instead, they are now written in `/etc/network/interfaces` file.
 
 v0.2.0
 ---
