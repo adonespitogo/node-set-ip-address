@@ -8,7 +8,8 @@ exports.generate = (currentConfig, interfaceConfig) => {
       version: 2,
       renderer: 'networkd',
       ethernets: currentConfig.network.ethernets || {},
-      vlans: currentConfig.network.vlans || {}
+      vlans: currentConfig.network.vlans || {},
+      bridges: currentConfig.network.bridges || {},
     }
   }
   var config = {}
@@ -22,9 +23,31 @@ exports.generate = (currentConfig, interfaceConfig) => {
       config.gateway4 = interfaceConfig.gateway
   } else {
     config.dhcp4 = true
+    config['dhcp-identifier'] = 'mac'
   }
-  if (!is_vlan)
-    cfg.network.ethernets[iface] = config
+  if (!is_vlan) {
+    if (Array.isArray(interfaceConfig.bridge_ports)) {
+      interfaceConfig.bridge_ports.forEach(p => {
+        if (!cfg.network.vlans[p]) {
+          cfg.network.ethernets[p] = {
+            dhcp4: false,
+            dhcp6: false
+          }
+        } else {
+          var vlan = cfg.network.vlans[p]
+          cfg.network.vlans[p] = {
+            id: vlan.id,
+            link: vlan.link,
+            dhcp4: false,
+            dhcp6: false
+          }
+        }
+      })
+      config.interfaces = interfaceConfig.bridge_ports
+      cfg.network.bridges[iface] = config
+    } else
+      cfg.network.ethernets[iface] = config
+  }
   else {
     config.id = interfaceConfig.vlanid
     config.link = iface
