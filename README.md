@@ -71,10 +71,38 @@ set_ip_address
   .configure([eth0, vlan1])
   .then(() => console.log('done writing config files')
 
-  // NOTE:
-  // eth0.10 vlan interface configuration will be
-  // created in /etc/network/interfaces.d/eth0
-  // and in /etc/netplan/whatever-your-conguration-file.yml
+```
+
+Configure Bridged Interfaces
+---
+
+```js
+var set_ip_address = require('set-ip-address')
+
+var eth0 = {
+  interface: 'eth0',
+  manual: true
+}
+
+var vlan1 {
+  interface: 'eth0',
+  vlanid: 10,
+  manual: true
+}
+
+var br0 = {
+  interface: 'br0',
+  ip_address: '10.0.0.1',
+  prefix: 20,
+  gateway: '10.0.0.1',
+  nameservers: ['8.8.8.8'],
+  bridge_ports: ['eth0', 'eth0.10']
+}
+
+set_ip_address
+  .configure([eth0, vlan1, br0])
+  .then(() => console.log('done writing config files')
+
 ```
 
 Restart Networking Service
