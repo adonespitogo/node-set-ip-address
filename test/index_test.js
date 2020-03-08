@@ -52,8 +52,9 @@ describe('index.js', () => {
       restart_stub.restore()
     })
 
-    it('should order configs, physical interface first then vlans', async () => {
+    it('should order configs, physical interface first then vlans, then bridge interfaces', async () => {
       var configs = [
+        {interface: 'br0', bridge_ports: ['eth0']},
         {interface: 'eth0'},
         {interface: 'eth0', vlanid: 10},
         {interface: 'eth1'},
@@ -64,6 +65,7 @@ describe('index.js', () => {
         {interface: 'eth1'},
         {interface: 'eth0', vlanid: 10},
         {interface: 'eth1', vlanid: 10},
+        {interface: 'br0', bridge_ports: ['eth0']},
       ]
       await set_ip_address.configure(configs)
       sinon.assert.calledWithExactly(dhcpcd.configure, expected_configs)
@@ -89,6 +91,35 @@ describe('index.js', () => {
         sinon.assert.notCalled(interfaces_d.configure)
         sinon.assert.notCalled(netplan.configure)
         sinon.assert.notCalled(restart_stub)
+      }
+    })
+
+    it('should reject if bridge_ports is overlapping', async () => {
+      try {
+        var configs = [
+          {interface: 'br0', dhcp: true, bridge_ports: ['eth0']},
+          {interface: 'br1', dhcp: true, bridge_ports: ['eth0']},
+          {interface: 'eth1', dhcp: true},
+        ]
+        await set_ip_address.configure(configs)
+        expect.fail()
+      } catch(e) {
+        expect(e).to.be.an('error')
+        expect(e.message).to.equal(`Interface "eth0" is bridged in "br0" and "br1"`)
+      }
+    })
+
+    it('should reject if vlan has bridge_ports', async () => {
+      try {
+        var configs = [
+          {interface: 'eth0', dhcp: true},
+          {interface: 'eth1', dhcp: true, vlanid: 10, bridge_ports: ['eth0']},
+        ]
+        await set_ip_address.configure(configs)
+        expect.fail()
+      } catch(e) {
+        expect(e).to.be.an('error')
+        expect(e.message).to.equal(`VLAN 10 in "eth1" cannot have bridged interfaces`)
       }
     })
 

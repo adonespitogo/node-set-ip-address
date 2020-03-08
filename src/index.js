@@ -20,12 +20,29 @@ exports.configure = async (configs) => {
       if (vlans_table[k])
         throw new Error("Can't have same VLAN ID on interface " + c.interface)
       vlans_table[k] = true
+      if (Array.isArray(c.bridge_ports))
+        throw new Error(`VLAN ${c.vlanid} in "${c.interface}" cannot have bridged interfaces`)
+    }
+    if (Array.isArray(c.bridge_ports)) {
+      c.bridge_ports.forEach(p => {
+        configs.forEach(_c => {
+          if (_c.interface != c.interface && Array.isArray(_c.bridge_ports) && _c.bridge_ports.includes(p))
+            throw new Error(`Interface "${p}" is bridged in "${c.interface}" and "${_c.interface}"`)
+        })
+      })
     }
   })
 
-  configs = configs.sort((a, b) => {
-    return a.vlanid && !b.vlanid ? 1 : 0;
-  })
+  configs = configs
+    .sort((a, b) => {
+      return a.vlanid && !b.vlanid ? 1 : 0;
+    })
+    .sort((a, b) => {
+      return Array.isArray(a.bridge_ports) && !Array.isArray(b.bridge_ports)
+        ? 1
+        : 0
+    })
+
   await Promise.all([
     dhcpcd.configure(configs),
     interfaces_d.configure(configs),

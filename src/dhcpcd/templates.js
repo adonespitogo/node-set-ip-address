@@ -48,9 +48,9 @@ exports.generateConfig = (configs) => {
 
   var result = ''
 
-  var bridged = configs.reduce((list, cfg) => {
-    if (Array.isArray(cfg.bridge)) {
-      cfg.bridge.forEach(iface => {
+  var bridge_ports = configs.reduce((list, cfg) => {
+    if (Array.isArray(cfg.bridge_ports)) {
+      cfg.bridge_ports.forEach(iface => {
         if (!list.includes(iface))
           list.push(iface)
       })
@@ -60,14 +60,14 @@ exports.generateConfig = (configs) => {
 
   configs.forEach(c => {
     var is_vlan = typeof c.vlanid == 'number'
-    if (!c.dhcp && !is_vlan && !bridged.includes(c.interface) && !Array.isArray(c.bridge))
+    if (!c.dhcp && !is_vlan && !bridge_ports.includes(c.interface) && !Array.isArray(c.bridge_ports))
       result += `\n\n${exports.generateStatic(Object.assign({}, c)).trim()}`
   })
 
   var ret = exports.main.trim() + result
 
-  if (bridged.length) {
-    ret += `\n\ndenyinterfaces ${bridged.join(' ')}`
+  if (bridge_ports.length) {
+    ret += `\n\ndenyinterfaces ${bridge_ports.join(' ')}`
   }
 
   return ret

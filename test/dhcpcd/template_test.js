@@ -103,7 +103,7 @@ static domain_name_servers=10.0.0.1 8.8.8.8
         },
         {
           interface: 'br0',
-          bridge: ['eth1']
+          bridge_ports: ['eth1', 'eth1']
         },
         {
           interface: 'wlan0',
@@ -113,6 +113,7 @@ static domain_name_servers=10.0.0.1 8.8.8.8
       var expected_config = templates.main.trim() + `\n\n${static_output}\n\ndenyinterfaces eth1`
       var ret = templates.generateConfig(configs)
       expect(ret).to.equal(expected_config)
+      sinon.assert.calledOnceWithExactly(templates.generateStatic, configs[0])
       static_stub.restore()
     })
 
