@@ -177,7 +177,12 @@ describe('netplan', () => {
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
     })
 
+  })
 
+  describe('bridged support', () => {
+    it('should create bridges', () => {
+    
+    }) 
   })
 
 })

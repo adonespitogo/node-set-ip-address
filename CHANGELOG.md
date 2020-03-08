@@ -1,6 +1,7 @@
 v1.0.0
 ---
   - Support for bridge interfaces
+  - Improve interoperability with [Windows Server](https://netplan.io/examples#integration-with-a-windows-dhcp-server)
   - Breaking changes:
     * Interface configs are no longer saved in individual files under `/etc/network/interfaces.d/`. Instead, they are now written in `/etc/network/interfaces` file.
 
