@@ -90,8 +90,17 @@ describe('interfaces.d/templates.js', () => {
       }
       var expected_output = 'iface eth0 inet manual'
       expect(templates.manualFormat(config)).to.equal(expected_output.trim())
-
     })
+    it('should generate manual config string for vlan', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 10,
+        manual: true
+      }
+      var expected_output = 'iface eth0.10 inet manual'
+      expect(templates.manualFormat(config)).to.equal(expected_output.trim())
+    })
+
   })
 
   describe('format()', () => {
