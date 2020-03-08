@@ -51,7 +51,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
   else {
     config.id = interfaceConfig.vlanid
     config.link = iface
-    cfg.network.vlans[`${iface}.${config.id}`] = config
+    cfg.network.vlans[interfaceConfig.ifname] = config
   }
   return cfg
 }

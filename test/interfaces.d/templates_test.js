@@ -33,9 +33,10 @@ describe('interfaces.d/templates.js', () => {
       expect(templates.staticFormat(config)).to.equal(expected_output.trim())
     })
 
-    describe('vlan', () => {
+    describe('VLAN support', () => {
       it('should generate static config string without gateway', () => {
         var config = {
+          ifname: 'eth0.0',
           interface: 'eth0',
           ip_address: '10.0.0.1',
           vlanid: 0,
@@ -46,6 +47,7 @@ describe('interfaces.d/templates.js', () => {
       })
       it('should generate static config string with gateway', () => {
         var config = {
+          ifname: 'eth0.10',
           interface: 'eth0',
           ip_address: '10.0.0.1',
           prefix: 20,
@@ -72,6 +74,7 @@ describe('interfaces.d/templates.js', () => {
     describe('vlan', () => {
       it('should generate dhcp config string', () => {
         var config = {
+          ifname: 'eth0.0',
           interface: 'eth0',
           dhcp: true,
           vlanid: 0
@@ -93,6 +96,7 @@ describe('interfaces.d/templates.js', () => {
     })
     it('should generate manual config string for vlan', () => {
       var config = {
+        ifname: 'eth0.10',
         interface: 'eth0',
         vlanid: 10,
         manual: true

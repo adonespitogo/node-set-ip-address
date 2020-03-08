@@ -63,8 +63,8 @@ describe('index.js', () => {
       var expected_configs = [
         {interface: 'eth0'},
         {interface: 'eth1'},
-        {interface: 'eth0', vlanid: 10},
-        {interface: 'eth1', vlanid: 10},
+        {interface: 'eth0', vlanid: 10, ifname: 'eth0.10'},
+        {interface: 'eth1', vlanid: 10, ifname: 'eth1.10'},
         {interface: 'br0', bridge_ports: ['eth0']},
       ]
       await set_ip_address.configure(configs)
@@ -83,9 +83,9 @@ describe('index.js', () => {
     it('should reject if one interface contains same vlan id', async () => {
       var configs = [
         {interface: 'eth0'},
-        {interface: 'eth0', vlanid: 10},
+        {interface: 'eth0', vlanid: 10, ifname: 'eth0.1'},
         {interface: 'eth1'},
-        {interface: 'eth0', vlanid: 10},
+        {interface: 'eth0', vlanid: 10, ifname: 'eth0.1'},
       ]
       try {
         await set_ip_address.configure(configs)
@@ -126,6 +126,28 @@ describe('index.js', () => {
         expect(e).to.be.an('error')
         expect(e.message).to.equal(`VLAN 10 in "eth1" cannot have bridged interfaces`)
       }
+    })
+
+    it('should set vlan ifname', async () => {
+      var eth0_vlan = {
+        interface: 'eth0',
+        vlanid: 10,
+        dhcp: true
+      }
+      var eth1_vlan = {
+        interface: 'enx00e04c534458',
+        vlanid: 10,
+        dhcp: true
+      }
+      var configs = [eth0_vlan, eth1_vlan]
+      var expected_configs = [
+        {interface: 'eth0', ifname: 'eth0.10', vlanid: 10, dhcp: true},
+        {interface: 'enx00e04c534458', ifname: '00e04c534458.10', vlanid: 10, dhcp: true},
+      ]
+      await set_ip_address.configure(configs)
+      sinon.assert.calledWithExactly(dhcpcd.configure, expected_configs)
+      sinon.assert.calledWithExactly(interfaces_d.configure, expected_configs)
+      sinon.assert.calledWithExactly(netplan.configure, expected_configs)
     })
 
     it('should call .configure for all modules for all (dhcpcd, interfaces.d and netplan)', async () => {

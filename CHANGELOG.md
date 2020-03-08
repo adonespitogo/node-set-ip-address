@@ -1,3 +1,7 @@
+v1.0.1
+---
+  - Fix error when vlan ifname > 15 characters
+ 
 v1.0.0
 ---
   - Support for bridge interfaces
