@@ -89,6 +89,7 @@ describe('netplan', () => {
     var expected_ethernets = {
       eth1: {
         dhcp4: true,
+        'dhcp-identifier': 'mac',
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
@@ -106,7 +107,8 @@ describe('netplan', () => {
         'eth0.0': {
           id: 0,
           link: 'eth0',
-          dhcp4: true
+          dhcp4: true,
+          'dhcp-identifier': 'mac',
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
@@ -180,9 +182,66 @@ describe('netplan', () => {
   })
 
   describe('bridged support', () => {
-    it('should create bridges', () => {
-    
-    }) 
+
+    it('should create bridge interfaces', () => {
+      var config = {
+        interface: 'br0',
+        ip_address: '20.0.0.1',
+        prefix: 20,
+        gateway: '20.0.0.1',
+        bridge_ports: ['eth0']
+      }
+      var expected_bridges = {
+        'br0': {
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ['20.0.0.1/20'],
+          gateway4: '20.0.0.1',
+          interfaces: ['eth0']
+        }
+      }
+      var res = templates.generate(defaults, config)
+      expect(res.network.ethernets).to.eql({
+        eth0: {dhcp4: false, dhcp6: false}
+      })
+      expect(res.network.bridges).to.eql(expected_bridges)
+    })
+
+    it('should create bridge interfaces with vlan', () => {
+      var config = {
+        interface: 'br0',
+        ip_address: '20.0.0.1',
+        prefix: 20,
+        gateway: '20.0.0.1',
+        bridge_ports: ['eth0.10']
+      }
+      defaults.network.vlans = {
+        'eth0.10': {
+          id: 10,
+          link: 'eth0',
+          dhcp4: true
+        }
+      }
+      var expected_bridges = {
+        'br0': {
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ['20.0.0.1/20'],
+          gateway4: '20.0.0.1',
+          interfaces: ['eth0.10']
+        }
+      }
+      var res = templates.generate(defaults, config)
+      expect(res.network.ethernets.eth0).to.be.undefined
+      expect(res.network.vlans['eth0.10']).to.eql({
+        id: 10,
+        link: 'eth0',
+        dhcp4: false,
+        dhcp6: false,
+      })
+      expect(res.network.bridges).to.eql(expected_bridges)
+    })
+
   })
 
 })

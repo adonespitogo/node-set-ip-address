@@ -33,14 +33,21 @@ exports.configure = async (configs) => {
     }
   })
 
-  configs = configs
+  var sorted = configs
     .sort((a, b) => {
-      return a.vlanid && !b.vlanid ? 1 : 0;
+      return typeof(a.vlanid) == 'number' && typeof(b.vlanid) != 'number'
+        ? 1
+        : typeof a.vlanid != 'number' && typeof b.vlanid == 'number'
+        ? -1
+        : 0
     })
     .sort((a, b) => {
-      return Array.isArray(a.bridge_ports) && !Array.isArray(b.bridge_ports)
+      var ret = !Array.isArray(a.bridge_ports) && Array.isArray(b.bridge_ports)
+        ? -1
+        : Array.isArray(a.bridge_ports) && !Array.isArray(b.bridge_ports)
         ? 1
         : 0
+      return ret
     })
 
   await Promise.all([

@@ -35,6 +35,7 @@ exports.writeConfig = async () => {
 exports.configure = (configs) => {
   exports.cfg_stack.network.ethernets = {}
   exports.cfg_stack.network.vlans = {}
+  exports.cfg_stack.network.bridges = {}
   configs.forEach(c => {
     var cfg = Object.assign({}, c)
     return exports.setInterface(cfg)
