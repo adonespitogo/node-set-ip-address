@@ -54,9 +54,9 @@ describe('index.js', () => {
 
     it('should order configs, physical interface first then vlans, then bridge interfaces', async () => {
       var configs = [
-        {interface: 'br0', bridge_ports: ['eth0']},
         {interface: 'eth0'},
         {interface: 'eth0', vlanid: 10},
+        {interface: 'br0', bridge_ports: ['eth0']},
         {interface: 'eth1'},
         {interface: 'eth1', vlanid: 10},
       ]
@@ -71,6 +71,11 @@ describe('index.js', () => {
       sinon.assert.calledWithExactly(dhcpcd.configure, expected_configs)
       sinon.assert.calledWithExactly(interfaces_d.configure, expected_configs)
       sinon.assert.calledWithExactly(netplan.configure, expected_configs)
+      expected_configs.forEach((c, i) => {
+        expect(dhcpcd.configure.firstCall.args[0][i]).to.eql(expected_configs[i])
+        expect(interfaces_d.configure.firstCall.args[0][i]).to.eql(expected_configs[i])
+        expect(netplan.configure.firstCall.args[0][i]).to.eql(expected_configs[i])
+      })
       sinon.assert.notCalled(restart_stub)
       sinon.assert.callOrder(dhcpcd.configure, interfaces_d.configure, netplan.configure)
     })
