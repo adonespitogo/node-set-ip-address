@@ -21,6 +21,7 @@ interface [INTERFACE]
 static ip_address=[ADDRESS]/[PREFIX]
 [GATEWAY]
 [DNS]
+[NOARP]
 `
 
 exports.generateStatic = (config) => {
@@ -29,6 +30,11 @@ exports.generateStatic = (config) => {
     .replace(/\[ADDRESS\]/, config.ip_address)
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
+
+  if(config.noarp)
+    result = result.replace(/\[NOARP\]/, 'noarp')
+  else
+    result = result.replace(/\[NOARP]\n/, '')
 
   config.nameservers = config.nameservers || []
   if (config.nameservers.length) {
@@ -73,4 +79,3 @@ exports.generateConfig = (configs) => {
   return ret
 
 }
-

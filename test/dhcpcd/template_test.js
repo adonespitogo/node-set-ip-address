@@ -38,6 +38,25 @@ static domain_name_servers=10.0.0.1 8.8.8.8
       expect(result).to.equal(expected_result)
     })
 
+    it('should generate config with noarp', ()=>{
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: ['10.0.0.1', '8.8.8.8'],
+        noarp: true
+      }
+      var expected_result = `
+interface eth0
+static ip_address=10.0.0.1/20
+static routers=10.0.0.1
+static domain_name_servers=10.0.0.1 8.8.8.8
+noarp
+`
+      var result = templates.generateStatic(config)
+      expect(result).to.equal(expected_result)
+    })
   })
 
   describe('generateConfig()', () => {
@@ -120,4 +139,3 @@ static domain_name_servers=10.0.0.1 8.8.8.8
   })
 
 })
-
