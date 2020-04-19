@@ -16,7 +16,6 @@ describe('dhcpcd/templates.js', () => {
       var expected_result = `
 interface eth0
 static ip_address=10.0.0.1/20
-
 `
       var result = templates.generateStatic(config)
       expect(result).to.equal(expected_result)
@@ -34,7 +33,6 @@ interface eth0
 static ip_address=10.0.0.1/20
 static routers=10.0.0.1
 static domain_name_servers=10.0.0.1 8.8.8.8
-
 `
       var result = templates.generateStatic(config)
       expect(result).to.equal(expected_result)

@@ -30,7 +30,11 @@ exports.generateStatic = (config) => {
     .replace(/\[ADDRESS\]/, config.ip_address)
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
-    .replace(/\[NOARP\]/, config.noarp? 'noarp' : '')
+
+  if(config.noarp)
+    result = result.replace(/\[NOARP\]/, 'noarp')
+  else
+    result = result.replace(/\[NOARP]\n/, '')
 
   config.nameservers = config.nameservers || []
   if (config.nameservers.length) {
