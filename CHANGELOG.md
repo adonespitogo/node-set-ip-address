@@ -1,3 +1,11 @@
+v1.0.3
+---
+  - Update package dependencies and fix vulnerabilites with `npm audit fix`
+
+v1.0.2
+---
+  - Allow interface hotplug
+
 v1.0.1
 ---
   - Fix error when vlan ifname > 15 characters
