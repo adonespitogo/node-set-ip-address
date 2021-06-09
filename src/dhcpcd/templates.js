@@ -66,7 +66,9 @@ exports.generateConfig = (configs) => {
   }, [])
 
   configs.forEach(c => {
-    if (!c.dhcp && !bridge_ports.includes(c.interface))
+    var is_vlan = typeof c.vlanid === 'number'
+    var iface_name = is_vlan ? c.interface + `.${c.vlanid}` : c.interface
+    if (!c.dhcp && !bridge_ports.includes(iface_name))
       result += `\n\n${exports.generateStatic({...c}).trim()}`
   })
 

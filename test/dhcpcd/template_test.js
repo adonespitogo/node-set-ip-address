@@ -131,8 +131,16 @@ ${static_output + 'eth1'}`
           nameservers: ['8.8.8.8']
         },
         {
+          interface: 'eth1',
+          vlanid: 0,
+          ip_address: '10.0.0.2',
+          prefix: 20,
+          gateway: '10.0.0.2',
+          nameservers: ['8.8.8.8']
+        },
+        {
           interface: 'br0',
-          bridge_ports: ['eth0'],
+          bridge_ports: ['eth0', 'eth1.0'],
           ip_address: '10.0.0.2',
           prefix: 20,
           gateway: '10.0.0.2',
@@ -143,7 +151,7 @@ ${static_output + 'eth1'}`
           dhcp: true
         }
       ]
-      var expected_config = templates.main.trim() + `\n\n${static_output + 'eth1'}\n\n${static_output + 'br0'}\n\ndenyinterfaces eth0`
+      var expected_config = templates.main.trim() + `\n\n${static_output + 'eth1'}\n\n${static_output + 'br0'}\n\ndenyinterfaces eth0 eth1.0`
       var ret = templates.generateConfig(configs)
       console.log(ret)
       expect(ret).to.equal(expected_config)
