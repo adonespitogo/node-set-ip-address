@@ -1,10 +1,16 @@
 'use strict'
 
 var sinon = require('sinon')
+var proxyquire = require('proxyquire').noPreserveCache()
 var { expect } = require('chai')
-var templates = require('../../src/dhcpcd/templates.js')
 
 describe('dhcpcd/templates.js', () => {
+
+  var templates;
+
+  beforeEach(() => {
+    templates = proxyquire('../../src/dhcpcd/templates.js', {})
+  })
 
   describe('generateStatic()', () => {
     it('should generate static config without gateway and dns', () => {
@@ -15,6 +21,20 @@ describe('dhcpcd/templates.js', () => {
       }
       var expected_result = `
 interface eth0
+static ip_address=10.0.0.1/20
+`
+      var result = templates.generateStatic(config)
+      expect(result).to.equal(expected_result)
+    })
+    it('should generate static config for VLAN', () => {
+      var config = {
+        interface: 'eth0',
+        vlanid: 100,
+        ip_address: '10.0.0.1',
+        prefix: 20
+      }
+      var expected_result = `
+interface eth0.100
 static ip_address=10.0.0.1/20
 `
       var result = templates.generateStatic(config)
@@ -60,9 +80,9 @@ noarp
   })
 
   describe('generateConfig()', () => {
-    it('should generate config', () => {
-      var static_output = 'some static output'
-      var static_stub = sinon.stub(templates, 'generateStatic').returns(static_output)
+    it('should generate config for physical interface (static and dynamic)', () => {
+      var static_output = 'some static output '
+      templates.generateStatic = sinon.fake(c => static_output + c.interface)
       var configs = [
         {
           interface: 'eth0',
@@ -75,14 +95,6 @@ noarp
           ip_address: '10.0.0.2',
           prefix: 20,
           gateway: '10.0.0.2',
-          nameservers: ['8.8.8.8']
-        },
-        {
-          interface: 'eth1',
-          vlanid: 0,
-          ip_address: '20.0.0.2',
-          prefix: 20,
-          gateway: '20.0.0.2',
           nameservers: ['8.8.8.8']
         },
         {
@@ -90,14 +102,20 @@ noarp
           dhcp: true
         }
       ]
-      var expected_config = templates.main.trim() + `\n\n${static_output}\n\n${static_output}`
-      expect(templates.generateConfig(configs)).to.equal(expected_config)
-      static_stub.restore()
+      var expected_config = templates.main.trim() + `
+
+${static_output + 'eth0'}
+
+${static_output + 'eth1'}`
+      var res = templates.generateConfig(configs)
+      console.log(res)
+      expect(res).to.equal(expected_config)
     })
 
     it('should generate config with bridged network', () => {
-      var static_output = 'some static output'
-      var static_stub = sinon.stub(templates, 'generateStatic').returns(static_output)
+      var static_output = 'some static output '
+      templates.generateStatic = sinon.fake(c => static_output + c.interface)
+
       var configs = [
         {
           interface: 'eth0',
@@ -110,30 +128,25 @@ noarp
           ip_address: '10.0.0.2',
           prefix: 20,
           gateway: '10.0.0.2',
-          nameservers: ['8.8.8.8']
-        },
-        {
-          interface: 'eth1',
-          vlanid: 0,
-          ip_address: '20.0.0.2',
-          prefix: 20,
-          gateway: '20.0.0.2',
           nameservers: ['8.8.8.8']
         },
         {
           interface: 'br0',
-          bridge_ports: ['eth1', 'eth1']
+          bridge_ports: ['eth0'],
+          ip_address: '10.0.0.2',
+          prefix: 20,
+          gateway: '10.0.0.2',
+          nameservers: ['8.8.8.8']
         },
         {
           interface: 'wlan0',
           dhcp: true
         }
       ]
-      var expected_config = templates.main.trim() + `\n\n${static_output}\n\ndenyinterfaces eth1`
+      var expected_config = templates.main.trim() + `\n\n${static_output + 'eth1'}\n\n${static_output + 'br0'}\n\ndenyinterfaces eth0`
       var ret = templates.generateConfig(configs)
+      console.log(ret)
       expect(ret).to.equal(expected_config)
-      sinon.assert.calledOnceWithExactly(templates.generateStatic, configs[0])
-      static_stub.restore()
     })
 
   })

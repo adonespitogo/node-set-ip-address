@@ -12,6 +12,13 @@ Install
 ---
 
 ```
+yarn add set-ip-address
+```
+
+OR
+
+
+```
 npm i --save set-ip-address
 ```
 

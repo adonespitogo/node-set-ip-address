@@ -1,6 +1,6 @@
 {
   "name": "set-ip-address",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node module for setting up network interface(s) ip address.",
   "main": "index.js",
   "scripts": {

@@ -25,8 +25,9 @@ static ip_address=[ADDRESS]/[PREFIX]
 `
 
 exports.generateStatic = (config) => {
+  var is_vlan = typeof config.vlanid == 'number'
   var result = exports.static
-    .replace(/\[INTERFACE\]/, config.interface)
+    .replace(/\[INTERFACE\]/, config.interface + (is_vlan ? `.${config.vlanid}` : ''))
     .replace(/\[ADDRESS\]/, config.ip_address)
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
@@ -65,9 +66,8 @@ exports.generateConfig = (configs) => {
   }, [])
 
   configs.forEach(c => {
-    var is_vlan = typeof c.vlanid == 'number'
-    if (!c.dhcp && !is_vlan && !bridge_ports.includes(c.interface) && !Array.isArray(c.bridge_ports))
-      result += `\n\n${exports.generateStatic(Object.assign({}, c)).trim()}`
+    if (!c.dhcp && !bridge_ports.includes(c.interface))
+      result += `\n\n${exports.generateStatic({...c}).trim()}`
   })
 
   var ret = exports.main.trim() + result
