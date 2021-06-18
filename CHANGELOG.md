@@ -1,3 +1,7 @@
+v1.0.7
+---
+  - Support for bridge interface options
+
 v1.0.3
 ---
   - Update package dependencies and fix vulnerabilites with `npm audit fix`
