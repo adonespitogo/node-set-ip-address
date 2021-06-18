@@ -193,7 +193,8 @@ describe('netplan', () => {
         ip_address: '20.0.0.1',
         prefix: 20,
         gateway: '20.0.0.1',
-        bridge_ports: ['eth0']
+        bridge_ports: ['eth0'],
+        bridge_opts: { stp: true }
       }
       var expected_bridges = {
         'br0': {
@@ -201,7 +202,10 @@ describe('netplan', () => {
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
           gateway4: '20.0.0.1',
-          interfaces: ['eth0']
+          interfaces: ['eth0'],
+          parameters: {
+            stp: true
+          }
         }
       }
       var res = templates.generate(defaults, config)
@@ -232,7 +236,8 @@ describe('netplan', () => {
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
           gateway4: '20.0.0.1',
-          interfaces: ['eth0.10']
+          interfaces: ['eth0.10'],
+          parameters: {stp: false}
         }
       }
       var res = templates.generate(defaults, config)

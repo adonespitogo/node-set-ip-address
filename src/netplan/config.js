@@ -27,6 +27,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
   }
   if (!is_vlan) {
     if (Array.isArray(interfaceConfig.bridge_ports)) {
+      interfaceConfig.bridge_opts = interfaceConfig.bridge_opts || {}
       interfaceConfig.bridge_ports.forEach(p => {
         if (!cfg.network.vlans[p]) {
           cfg.network.ethernets[p] = {
@@ -43,7 +44,10 @@ exports.generate = (currentConfig, interfaceConfig) => {
           }
         }
       })
+      var opts = interfaceConfig.bridge_opts
+      var { stp } = opts
       config.interfaces = interfaceConfig.bridge_ports
+      config.parameters = { stp: !!stp }
       cfg.network.bridges[iface] = config
     } else
       cfg.network.ethernets[iface] = config
