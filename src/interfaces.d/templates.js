@@ -67,13 +67,10 @@ exports.format = (config) => {
     : exports.staticFormat(config)
 
   if (Array.isArray(config.bridge_ports)) {
+    config.bridge_opts = config.bridge_opts || {}
+    var { stp } = config.bridge_opts
     ret += `\n  bridge_ports ${config.bridge_ports.join(' ')}`
-    if (typeof config.bridge_opts == 'object') {
-      Object.keys(config.bridge_opts).forEach(k => {
-        var v = config.bridge_opts[k]
-        ret += `\n  ${k} ${v}`
-      })
-    }
+    ret += `\n  bridge_stp ${stp ? 'on' : 'off'}`
   }
 
   return ret

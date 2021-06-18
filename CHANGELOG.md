@@ -1,6 +1,7 @@
-v1.0.7
+v1.0.4-8
 ---
-  - Support for bridge interface options
+  - Support for bridge `stp` option
+  - Use netmask instead of network prefix in /etc/network/interfaces
 
 v1.0.3
 ---

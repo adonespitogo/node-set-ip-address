@@ -155,7 +155,7 @@ describe('interfaces.d/templates.js', () => {
         bridge_ports: ['eth0', 'eth1']
       }
       var dhcp_str = 'some dhcp config'
-      var expected_output = dhcp_str + '\n  bridge_ports eth0 eth1'
+      var expected_output = dhcp_str + '\n  bridge_ports eth0 eth1' + '\n  bridge_stp off'
       sinon.stub(templates, 'dhcpFormat').returns(dhcp_str)
       var res = templates.format(config)
       expect(res).to.equal(expected_output)
@@ -169,11 +169,11 @@ describe('interfaces.d/templates.js', () => {
         dhcp: true,
         bridge_ports: ['eth0', 'eth1'],
         bridge_opts: {
-          bridge_stp: 'off'
+          stp: true
         }
       }
       var dhcp_str = 'some dhcp config'
-      var expected_output = dhcp_str + '\n  bridge_ports eth0 eth1' + '\n  bridge_stp off'
+      var expected_output = dhcp_str + '\n  bridge_ports eth0 eth1' + '\n  bridge_stp on'
       sinon.stub(templates, 'dhcpFormat').returns(dhcp_str)
       var res = templates.format(config)
       expect(res).to.equal(expected_output)

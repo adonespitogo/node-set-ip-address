@@ -103,7 +103,10 @@ var br0 = {
   prefix: 20,
   gateway: '10.0.0.1',
   nameservers: ['8.8.8.8'],
-  bridge_ports: ['eth0', 'eth0.10']
+  bridge_ports: ['eth0', 'eth0.10'],
+  bridge_opts: {
+    stp: true
+  }
 }
 
 set_ip_address
