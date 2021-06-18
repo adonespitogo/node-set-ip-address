@@ -50,7 +50,7 @@ exports.dhcpFormat = (config) => {
 exports.manualFormat = config => {
   var is_vlan = typeof config.vlanid == 'number'
   var iface = is_vlan
-    ? config.ifname 
+    ? config.ifname
     : config.interface
 
   var ret = `iface ${iface} inet manual`
@@ -68,6 +68,12 @@ exports.format = (config) => {
 
   if (Array.isArray(config.bridge_ports)) {
     ret += `\n  bridge_ports ${config.bridge_ports.join(' ')}`
+    if (typeof config.bridge_opts == 'object') {
+      Object.keys(config.bridge_opts).forEach(k => {
+        var v = config.bridge_opts[k]
+        ret += `\n  ${k} ${v}`
+      })
+    }
   }
 
   return ret

@@ -163,6 +163,24 @@ describe('interfaces.d/templates.js', () => {
       templates.dhcpFormat.restore()
     })
 
+    it('should add bridge options', () => {
+      var config = {
+        interface: 'br0',
+        dhcp: true,
+        bridge_ports: ['eth0', 'eth1'],
+        bridge_opts: {
+          bridge_stp: 'off'
+        }
+      }
+      var dhcp_str = 'some dhcp config'
+      var expected_output = dhcp_str + '\n  bridge_ports eth0 eth1' + '\n  bridge_stp off'
+      sinon.stub(templates, 'dhcpFormat').returns(dhcp_str)
+      var res = templates.format(config)
+      expect(res).to.equal(expected_output)
+      sinon.assert.calledWithExactly(templates.dhcpFormat, config)
+      templates.dhcpFormat.restore()
+    })
+
   })
 
 })
