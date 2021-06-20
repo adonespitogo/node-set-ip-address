@@ -214,7 +214,8 @@ describe('netplan', () => {
           interfaces: ['eth0'],
           parameters: {
             stp: true
-          }
+          },
+          optional: true
         }
       }
       var res = templates.generate(defaults, config)
