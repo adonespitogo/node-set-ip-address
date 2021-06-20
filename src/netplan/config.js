@@ -13,6 +13,10 @@ exports.generate = (currentConfig, interfaceConfig) => {
     }
   }
   var config = {}
+
+  if (interfaceConfig.optional)
+    config.optional = true
+
   if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
     config.dhcp4 = false
     config.dhcp6 = false
@@ -57,5 +61,6 @@ exports.generate = (currentConfig, interfaceConfig) => {
     config.link = iface
     cfg.network.vlans[interfaceConfig.ifname] = config
   }
+
   return cfg
 }

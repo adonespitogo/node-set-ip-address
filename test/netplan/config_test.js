@@ -30,7 +30,8 @@ describe('netplan', () => {
       interface: 'eth0',
       ip_address: '10.0.0.1',
       prefix: 20,
-      nameservers: ['10.0.0.1']
+      nameservers: ['10.0.0.1'],
+      optional: true
     }
     var expected_ethernets = {
       eth0: {
@@ -39,7 +40,8 @@ describe('netplan', () => {
         addresses: ['10.0.0.1/20'],
         nameservers: {
           addresses: config.nameservers
-        }
+        },
+        optional: true
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
@@ -51,7 +53,8 @@ describe('netplan', () => {
       ip_address: '10.0.0.1',
       prefix: 20,
       nameservers: ['10.0.0.1'],
-      gateway: '10.0.0.1'
+      gateway: '10.0.0.1',
+      optional: true
     }
 
     var eth0 = {
@@ -66,7 +69,7 @@ describe('netplan', () => {
     defaults.network.ethernets.eth0 = eth0
 
     var expected_ethernets = {
-      eth0,
+      eth0: {...eth0},
       eth1: {
         dhcp4: false,
         dhcp6: false,
@@ -74,7 +77,8 @@ describe('netplan', () => {
         gateway4: config.gateway,
         nameservers: {
           addresses: config.nameservers
-        }
+        },
+        optional: true
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
@@ -83,13 +87,15 @@ describe('netplan', () => {
   it('it should set interface to dynmic ip', () => {
     var config = {
       interface: 'eth1',
-      dhcp: true
+      dhcp: true,
+      optional: true
     }
 
     var expected_ethernets = {
       eth1: {
         dhcp4: true,
         'dhcp-identifier': 'mac',
+        optional: true
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
@@ -102,7 +108,8 @@ describe('netplan', () => {
         ifname: 'eth0.0',
         interface: 'eth0',
         vlanid: 0,
-        dhcp:  true
+        dhcp:  true,
+        optional:  true
       }
       var expected_vlans = {
         'eth0.0': {
@@ -110,6 +117,7 @@ describe('netplan', () => {
           link: 'eth0',
           dhcp4: true,
           'dhcp-identifier': 'mac',
+          optional:  true
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
@@ -194,7 +202,8 @@ describe('netplan', () => {
         prefix: 20,
         gateway: '20.0.0.1',
         bridge_ports: ['eth0'],
-        bridge_opts: { stp: true }
+        bridge_opts: { stp: true },
+        optional: true
       }
       var expected_bridges = {
         'br0': {

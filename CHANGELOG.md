@@ -1,3 +1,8 @@
+v1.0.9
+---
+  - Added configuration for the loopback interface in `/etc/network/interfaces`
+  - Support for netplan `optional` param
+
 v1.0.4-8
 ---
   - Support for bridge `stp` option
