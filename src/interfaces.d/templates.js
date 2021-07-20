@@ -22,6 +22,14 @@ allow-hotplug  [INTERFACE]
 iface  [INTERFACE]  inet  dhcp
 [VLAN]
 `
+
+exports.ppp = `
+auto  [INTERFACE]
+iface  [INTERFACE]  inet  ppp
+pre-up  /bin/ip  link  set  [PHYSICAL_INTERFACE]  up
+provider  [INTERFACE]
+`
+
 exports.staticFormat = (config) => {
   var is_vlan = typeof config.vlanid == 'number'
   var ifname = is_vlan
@@ -62,8 +70,16 @@ exports.manualFormat = config => {
     : ret
 }
 
+exports.pppformat = config => {
+  return exports.ppp
+    .replace(/\[INTERFACE\]/g, config.interface)
+    .replace(/\[PHYSICAL_INTERFACE\]/, config.physical_interface)
+    .trim()
+}
+
 exports.format = (config) => {
-  var ret = config.dhcp
+  var ret = config.ppp ? exports.pppformat(config)
+    : config.dhcp
     ? exports.dhcpFormat(config)
     : config.manual
     ? exports.manualFormat(config)
