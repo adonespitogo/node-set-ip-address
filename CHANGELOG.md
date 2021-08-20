@@ -1,3 +1,7 @@
+v1.0.10
+---
+  - Added `dns-nameservers` option to interfaces.d
+
 v1.0.9
 ---
   - Added configuration for the loopback interface in `/etc/network/interfaces`

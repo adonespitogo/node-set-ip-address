@@ -8,6 +8,18 @@ describe('interfaces.d/templates.js', () => {
 
   describe('staticFormat()', () => {
 
+    it('should generate static config string with gateway', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: ['10.0.0.1', '8.8.4.4']
+      }
+      var expected_output = require('./templates/static_ip_with_gateway.js')
+      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+    })
+
     it('should generate static config string without gateway', () => {
       var config = {
         interface: 'eth0',
@@ -18,29 +30,7 @@ describe('interfaces.d/templates.js', () => {
       expect(templates.staticFormat(config)).to.equal(expected_output.trim())
     })
 
-    it('should generate static config string with gateway', () => {
-      var config = {
-        interface: 'eth0',
-        ip_address: '10.0.0.1',
-        prefix: 20,
-        gateway: '10.0.0.1'
-      }
-      var expected_output = require('./templates/static_ip_with_gateway.js')
-      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
-    })
-
     describe('VLAN support', () => {
-      it('should generate static config string without gateway', () => {
-        var config = {
-          ifname: 'eth0.0',
-          interface: 'eth0',
-          ip_address: '10.0.0.1',
-          vlanid: 0,
-          prefix: 20
-        }
-        var expected_output = require('./templates/vlan_static_ip_wo_gateway.js')
-        expect(templates.staticFormat(config)).to.equal(expected_output.trim())
-      })
       it('should generate static config string with gateway', () => {
         var config = {
           ifname: 'eth0.10',
@@ -51,6 +41,18 @@ describe('interfaces.d/templates.js', () => {
           gateway: '10.0.0.1'
         }
         var expected_output = require('./templates/vlan_static_ip_with_gateway.js')
+        expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+      })
+      it('should generate static config string without gateway', () => {
+        var config = {
+          ifname: 'eth0.0',
+          interface: 'eth0',
+          ip_address: '10.0.0.1',
+          nameservers: ['10.0.0.1', '8.8.4.4'],
+          vlanid: 0,
+          prefix: 20
+        }
+        var expected_output = require('./templates/vlan_static_ip_wo_gateway.js')
         expect(templates.staticFormat(config)).to.equal(expected_output.trim())
       })
     })

@@ -13,6 +13,7 @@ allow-hotplug  [INTERFACE]
 iface  [INTERFACE]  inet  static
   address  [ADDRESS]
   netmask  [NETMASK]
+[NAMESERVERS]
 [GATEWAY]
 [VLAN]
 `
@@ -42,6 +43,7 @@ exports.staticFormat = (config) => {
     .replace(/\[INTERFACE\]/g, ifname)
     .replace(/\[ADDRESS\]/, config.ip_address)
     .replace(/\[NETMASK\]/, block.mask)
+    .replace(/\[NAMESERVERS\]\n/, config.nameservers? `  dns-nameservers  ${config.nameservers.join(' ')}\n`: '')
     .replace(/\[GATEWAY\]\n/, config.gateway? `  gateway  ${config.gateway}\n`: '')
     .replace(/\[VLAN\]/, is_vlan? `  vlan-raw-device ${config.interface}` : '')
     .trim()
