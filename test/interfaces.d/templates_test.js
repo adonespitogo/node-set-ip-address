@@ -108,7 +108,7 @@ describe('interfaces.d/templates.js', () => {
   describe('pppFormat()', () => {
     it('should generate ppp config string', () => {
       var config = {
-        interface: 'ppp0',
+        provider: 'dsl-provider',
         physical_interface: 'eth0'
       }
       var expected_output = require('./templates/ppp_format.js')

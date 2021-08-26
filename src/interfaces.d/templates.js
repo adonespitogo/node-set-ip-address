@@ -25,10 +25,10 @@ iface  [INTERFACE]  inet  dhcp
 `
 
 exports.ppp = `
-auto  [INTERFACE]
-iface  [INTERFACE]  inet  ppp
+auto  [PROVIDER]
+iface  [PROVIDER]  inet  ppp
 pre-up  /bin/ip  link  set  [PHYSICAL_INTERFACE]  up
-provider  [INTERFACE]
+provider  [PROVIDER]
 `
 
 exports.staticFormat = (config) => {
@@ -74,7 +74,7 @@ exports.manualFormat = config => {
 
 exports.pppformat = config => {
   return exports.ppp
-    .replace(/\[INTERFACE\]/g, config.interface)
+    .replace(/\[PROVIDER\]/g, config.provider)
     .replace(/\[PHYSICAL_INTERFACE\]/, config.physical_interface)
     .trim()
 }
