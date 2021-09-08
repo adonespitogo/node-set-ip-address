@@ -263,6 +263,19 @@ describe('netplan', () => {
 
   })
 
+  describe('ppp exclusion', () => {
+
+    it.only('should not add ppp interface to ethernets', () => {
+      var config = {
+        physical_interface: 'eth1',
+        provider: 'dsl-provider',
+        ppp: true
+      }
+      expect(templates.generate(defaults, config).network.ethernets).to.empty
+    })
+
+  })
+
 })
 
 
