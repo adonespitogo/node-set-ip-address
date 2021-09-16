@@ -116,7 +116,7 @@ Configure PPPoE Interface
 
 ```js
 var ppp = {
-  provider: 'eth0.11',
+  provider: 'dsl-provider',
   physical_interface: 'eth0'
 }
 
