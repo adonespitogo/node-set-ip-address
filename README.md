@@ -27,7 +27,9 @@ Basic Usage
 
 ```js
 var set_ip_address = require('set-ip-address')
+```
 
+```
 var eth0 = {
   interface: 'eth0',
   ip_address: '10.0.0.1',
@@ -56,8 +58,6 @@ sudo modprobe 8021q
 ```
 
 ```js
-var set_ip_address = require('set-ip-address')
-
 var eth0 = {
   interface: 'eth0',
   ip_address: '10.0.0.1',
@@ -75,9 +75,7 @@ var vlan1 {
   nameservers: ['8.8.8.8']
 }
 
-set_ip_address
-  .configure([eth0, vlan1])
-  .then(() => console.log('done writing config files')
+set_ip_address.configure([eth0, vlan1]).then(() => console.log('done writing config files')
 
 ```
 
@@ -85,8 +83,6 @@ Configure Bridged Interfaces
 ---
 
 ```js
-var set_ip_address = require('set-ip-address')
-
 var eth0 = {
   interface: 'eth0',
   manual: true
@@ -112,6 +108,20 @@ var br0 = {
 
 set_ip_address
   .configure([eth0, vlan1, br0])
+  .then(() => console.log('done writing config files')
+```
+
+Configure PPPoE Interface
+---
+
+```js
+var ppp = {
+  provider: 'eth0.11',
+  physical_interface: 'eth0'
+}
+
+set_ip_address
+  .configure([ppp])
   .then(() => console.log('done writing config files')
 
 ```

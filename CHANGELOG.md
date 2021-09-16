@@ -1,3 +1,7 @@
+v1.1.0
+---
+  - Add support for PPPoE interface
+
 v1.0.10
 ---
   - Added `dns-nameservers` option to interfaces.d
