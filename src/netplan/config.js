@@ -53,7 +53,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
       config.interfaces = interfaceConfig.bridge_ports
       config.parameters = { stp: !!stp }
       cfg.network.bridges[iface] = config
-    } else
+    } else if (!interfaceConfig.ppp)
       cfg.network.ethernets[iface] = config
   }
   else {

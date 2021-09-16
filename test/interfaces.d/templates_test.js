@@ -105,6 +105,17 @@ describe('interfaces.d/templates.js', () => {
 
   })
 
+  describe('pppFormat()', () => {
+    it('should generate ppp config string', () => {
+      var config = {
+        provider: 'dsl-provider',
+        physical_interface: 'eth0'
+      }
+      var expected_output = require('./templates/ppp_format.js')
+      expect(templates.pppformat(config)).to.equal(expected_output.trim())
+    })
+  })
+
   describe('format()', () => {
 
     it('should call staticFormat()', () => {
