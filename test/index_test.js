@@ -10,24 +10,20 @@ describe('index.js', () => {
     dhcpcd,
     interfaces_d,
     netplan,
-    exec,
-    exec_cbs
+    child_process
 
   beforeEach(() => {
 
     dhcpcd = {configure: sinon.fake.resolves()}
     interfaces_d = {configure: sinon.fake.resolves()}
     netplan = {configure: sinon.fake.resolves()}
-    exec_cbs = []
-    exec = sinon.fake((cmd, cb) => {
-      exec_cbs.push(cb)
-    })
+    child_process = {}
 
     set_ip_address = proxyquire('../src/index.js', {
       './dhcpcd/index.js': dhcpcd,
       './interfaces.d/index.js': interfaces_d,
       './netplan/index.js': netplan,
-      'child_process' : { exec }
+      'child_process' : child_process
     })
   })
 
@@ -177,38 +173,37 @@ describe('index.js', () => {
 
   describe('restartService()', () => {
 
-    it('should resolve if one service is ok', (done) => {
+    it('should resolve if one service is ok', async () => {
       var error = 'some error'
-      set_ip_address.restartService()
-        .then(() => {
-          expect(exec.firstCall.args[0]).to.equal('service networking restart')
-          expect(exec.secondCall.args[0]).to.equal('netplan try')
-          expect(exec.thirdCall.args[0]).to.equal('netplan apply')
-        })
-        .then(() => done())
-        .catch(e => done(e))
-      exec_cbs.forEach((cb, i) => {
-        if (i == 0)
-          cb(error)
-        else
-          cb()
+      var cmds = []
+      var exec_cbs = []
+      var exec = sinon.fake((cmd, cb) => {
+        cmds.push(cmd)
+        exec_cbs.push(cb)
       })
-      // netplan apply cb
-      setTimeout(() => {
-        exec_cbs[2]()
-      })
+      child_process.exec = exec
+
+      var p = set_ip_address.restartService()
+
+      for (var i in [0, 1, 2]) {
+        exec_cbs[i](i === 0 ? error : null)
+        await Promise.resolve()
+        await Promise.resolve()
+        await Promise.resolve()
+      }
+      expect(cmds[0]).to.equal('service networking restart')
+      expect(cmds[1]).to.equal('netplan try')
+      expect(cmds[2]).to.equal('netplan apply')
+
+      return p
     })
 
-    it('should reject if all service failed', (done) => {
+    it('should reject if all service failed', () => {
       var error = 'some error'
-      set_ip_address.restartService()
-        .then(() => done())
-        .catch(e => {
-          expect(e).to.equal(error)
-          done()
-        })
-      exec_cbs.forEach((cb, i) => {
-        cb(error)
+      child_process.exec = sinon.fake((cmd, cb) => cb(error))
+
+      return set_ip_address.restartService().catch(e => {
+        expect(e).to.equal(error)
       })
     })
 

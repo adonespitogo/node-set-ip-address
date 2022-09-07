@@ -1,11 +1,9 @@
 'use strict'
-
+var child_process = require('child_process')
 var interfaces_d = require('./interfaces.d/index.js')
 var dhcpcd = require('./dhcpcd/index.js')
 var netplan = require('./netplan/index.js')
-var { exec } = require('child_process')
 var { promisify } = require('util')
-var execPromise = promisify(exec)
 
 exports.configure = async (configs) => {
 
@@ -66,23 +64,26 @@ exports.configure = async (configs) => {
 }
 
 exports.restartService = async () => {
-  var error
+  var { exec } = child_process
+  var execPromise = promisify(exec)
+
+  var error = null
   var network_service_restarted = false
-  var networking_restart = execPromise('service networking restart')
-    .then(() => network_service_restarted = true)
-    .catch(e => {
-      console.log(e)
-      error = e
-    })
-  var netplan_restart = execPromise('netplan try')
-    .then(() => execPromise('netplan apply'))
+
+  await execPromise('service networking restart')
     .then(() => network_service_restarted = true)
     .catch(e => {
       console.log(e)
       error = e
     })
 
-  await Promise.all([networking_restart, netplan_restart])
+  await execPromise('netplan try')
+    .then(() => execPromise('netplan apply'))
+    .then(() => network_service_restarted = true)
+    .catch(e => {
+      console.log(e)
+      error = e
+    })
 
   if (!network_service_restarted)
     return Promise.reject(error)
