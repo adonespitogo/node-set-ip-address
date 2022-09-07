@@ -1,5 +1,5 @@
 # set-ip-address
-Node module for setting up network interface(s) ip address, dns, and default routes.
+Node module for setting up network interface(s) ip address, dns, and default routes of physical network interfaces, VLAN, and bridged interfaces.
 
 [![Build Status](https://travis-ci.com/adonespitogo/node-set-ip-address.svg?branch=master)](https://travis-ci.com/adonespitogo/node-set-ip-address)
 
@@ -48,10 +48,10 @@ set_ip_address.configure([eth0, eth1]).then(() => console.log('done writing conf
 
 ```
 
-Configure VLAN
+Create and Configure VLAN Interface
 ---
 
-You can create vlan interface by passing `vlanid` option. Make sure to load `8021q` module to the kernel:
+You can create vlan interfaces by passing `vlanid` option. Make sure to load `8021q` module to the kernel:
 
 ```
 sudo modprobe 8021q
@@ -79,7 +79,7 @@ set_ip_address.configure([eth0, vlan1]).then(() => console.log('done writing con
 
 ```
 
-Configure Bridged Interfaces
+Create and Configure Bridged Interfaces
 ---
 
 ```js
@@ -111,7 +111,7 @@ set_ip_address
   .then(() => console.log('done writing config files')
 ```
 
-Configure PPPoE Interface
+Create and Configure PPPoE Interface
 ---
 
 ```js
