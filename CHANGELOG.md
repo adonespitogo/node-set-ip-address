@@ -1,3 +1,7 @@
+v1.1.1
+---
+  - Accept `nameservers` option format in string separated by comma or space
+
 v1.1.0
 ---
   - Add support for PPPoE interface
