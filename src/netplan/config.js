@@ -41,7 +41,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
     }
     // end dns config
     if (interfaceConfig.gateway)
-      config.gateway4 = interfaceConfig.gateway
+      config.routes = [{to: 'default', via: interfaceConfig.gateway}]
   } else {
     config.dhcp4 = true
     config['dhcp-identifier'] = 'mac'
