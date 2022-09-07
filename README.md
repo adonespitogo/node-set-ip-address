@@ -29,7 +29,7 @@ Basic Usage
 var set_ip_address = require('set-ip-address')
 ```
 
-```
+```js
 var eth0 = {
   interface: 'eth0',
   ip_address: '10.0.0.1',
