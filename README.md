@@ -1,5 +1,5 @@
 # set-ip-address
-Node module for setting up network interface(s) ip address.
+Node module for setting up network interface(s) ip address, dns, and default routes.
 
 [![Build Status](https://travis-ci.com/adonespitogo/node-set-ip-address.svg?branch=master)](https://travis-ci.com/adonespitogo/node-set-ip-address)
 
