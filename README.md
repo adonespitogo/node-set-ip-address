@@ -35,7 +35,7 @@ var eth0 = {
   ip_address: '10.0.0.1',
   prefix: 20,
   gateway: '10.0.0.1',
-  nameservers: ['8.8.8.8'],
+  nameservers: ['8.8.8.8'], // nameservers can also be a string separated by space/comma, ex: `"1.1.1.1, 8.8.8.8 8.8.4.4"`
   optional: true // (netplan) - dont wait for interfaces to avoid boot delay
 }
 
