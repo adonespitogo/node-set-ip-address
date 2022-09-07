@@ -1,3 +1,7 @@
+v1.2.0
+---
+  - Now uses `routes` instead of the deprecated `gateway4` for the default gateway. Fixes #33
+
 v1.1.1
 ---
   - Accept `nameservers` option format in string separated by comma or space
