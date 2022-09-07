@@ -1,3 +1,7 @@
+v1.2.1
+---
+  - Don't run restart networking service commands in parallel
+
 v1.2.0
 ---
   - Now uses `routes` instead of the deprecated `gateway4` for the default gateway. Fixes #33
