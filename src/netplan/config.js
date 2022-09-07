@@ -1,5 +1,7 @@
 'use strict'
 
+var trim_ip_address = require('../helpers/trim_ip_address.js')
+
 exports.generate = (currentConfig, interfaceConfig) => {
   var iface = interfaceConfig.interface
   var is_vlan = typeof interfaceConfig.vlanid == 'number'
@@ -20,9 +22,24 @@ exports.generate = (currentConfig, interfaceConfig) => {
   if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
     config.dhcp4 = false
     config.dhcp6 = false
-    config.addresses = [interfaceConfig.ip_address + '/' + interfaceConfig.prefix]
-    if (interfaceConfig.nameservers)
-      config.nameservers = {addresses: interfaceConfig.nameservers}
+    config.addresses = [trim_ip_address(interfaceConfig.ip_address) + '/' + interfaceConfig.prefix]
+
+    // dns nameservers
+    if (interfaceConfig.nameservers) {
+      var ns = interfaceConfig.nameservers
+      var r = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g
+      if (typeof ns === 'string') {
+        var addresses = ns.match(r)
+        config.nameservers = { addresses }
+      } else if (Array.isArray(interfaceConfig.nameservers)) {
+        var addresses = interfaceConfig.nameservers.reduce((result, item) => {
+          var addrs = item.match(r)
+          return result.concat(addrs)
+        }, [])
+        config.nameservers = { addresses }
+      } else {}
+    }
+    // end dns config
     if (interfaceConfig.gateway)
       config.gateway4 = interfaceConfig.gateway
   } else {
@@ -55,8 +72,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
       cfg.network.bridges[iface] = config
     } else if (!interfaceConfig.ppp)
       cfg.network.ethernets[iface] = config
-  }
-  else {
+  } else {
     config.id = interfaceConfig.vlanid
     config.link = iface
     cfg.network.vlans[interfaceConfig.ifname] = config

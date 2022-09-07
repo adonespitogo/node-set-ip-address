@@ -11,9 +11,9 @@ describe('interfaces.d/templates.js', () => {
     it('should generate static config string with gateway', () => {
       var config = {
         interface: 'eth0',
-        ip_address: '10.0.0.1',
+        ip_address: '10.0.0.1 ',
         prefix: 20,
-        gateway: '10.0.0.1',
+        gateway: '10.0.0.1 ',
         nameservers: ['10.0.0.1', '8.8.4.4']
       }
       var expected_output = require('./templates/static_ip_with_gateway.js')
@@ -27,6 +27,54 @@ describe('interfaces.d/templates.js', () => {
         prefix: 20
       }
       var expected_output = require('./templates/static_ip_wo_gateway.js')
+      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+    })
+
+    it('should generate static config string with multiple dns in string', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: 'x.asdfasdfosdfj'
+      }
+      var expected_output = require('./templates/static_ip_with_invalid_dns.js')
+      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+    })
+
+    it('should generate static config string with multiple dns separated by space', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: ' 10.0.0.1 8.8.4.4 '
+      }
+      var expected_output = require('./templates/static_ip_with_multi_dns_separated_by_space.js')
+      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+    })
+
+    it('should generate static config string with multiple dns separated by space in array', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: [' 10.0.0.1 8.8.4.4 ', '1.1.1.1']
+      }
+      var expected_output = require('./templates/static_ip_with_multi_dns_separated_by_space_in_array.js')
+      expect(templates.staticFormat(config)).to.equal(expected_output.trim())
+    })
+
+    it('should generate static config string with invalid dns in array', () => {
+      var config = {
+        interface: 'eth0',
+        ip_address: '10.0.0.1',
+        prefix: 20,
+        gateway: '10.0.0.1',
+        nameservers: [' x.x.x 8.8.4.y ', '1.1.1.x']
+      }
+      var expected_output = require('./templates/static_ip_with_invalid_dns.js')
       expect(templates.staticFormat(config)).to.equal(expected_output.trim())
     })
 
