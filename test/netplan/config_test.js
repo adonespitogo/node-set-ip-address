@@ -28,7 +28,7 @@ describe('netplan', () => {
   it('it should generate config for single interface with no gateway', () => {
     var config = {
       interface: 'eth0',
-      ip_address: '10.0.0.1',
+      ip_address: '10.0.0.1 ',
       prefix: 20,
       nameservers: ['10.0.0.1'],
       optional: true
@@ -40,6 +40,50 @@ describe('netplan', () => {
         addresses: ['10.0.0.1/20'],
         nameservers: {
           addresses: config.nameservers
+        },
+        optional: true
+      }
+    }
+    expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
+  })
+
+  it('it should generate config for single interface with multiple dns separated by space', () => {
+    var config = {
+      interface: 'eth0',
+      ip_address: ' 10.0.0.1',
+      prefix: 20,
+      nameservers: ' 10.0.0.1 8.8.8.8 ',
+      optional: true
+    }
+    var expected_ethernets = {
+      eth0: {
+        dhcp4: false,
+        dhcp6: false,
+        addresses: ['10.0.0.1/20'],
+        nameservers: {
+          addresses: ['10.0.0.1', '8.8.8.8']
+        },
+        optional: true
+      }
+    }
+    expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
+  })
+
+  it('it should generate config for single interface with multiple dns in array', () => {
+    var config = {
+      interface: 'eth0',
+      ip_address: '10.0.0.1',
+      prefix: 20,
+      nameservers: [' 10.0.0.1 8.8.8.8 '],
+      optional: true
+    }
+    var expected_ethernets = {
+      eth0: {
+        dhcp4: false,
+        dhcp6: false,
+        addresses: ['10.0.0.1/20'],
+        nameservers: {
+          addresses: ['10.0.0.1', '8.8.8.8']
         },
         optional: true
       }
@@ -82,6 +126,42 @@ describe('netplan', () => {
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
+  })
+
+  it('it should generate config for 2nd interface with multiple dns separated by comma', () => {
+    var eth0 = {
+      dhcp4: false,
+      dhcp6: false,
+      addresses: ['10.0.0.1/20'],
+      nameservers: {
+        addresses: ['10.0.0.1']
+      }
+    }
+    var eth1_config = {
+      interface: 'eth1',
+      ip_address: '10.0.0.1',
+      prefix: 20,
+      nameservers: '10.0.0.1, 8.8.8.8',
+      gateway: '10.0.0.1',
+      optional: true
+    }
+
+    defaults.network.ethernets.eth0 = eth0
+
+    var expected_ethernets = {
+      eth0: {...eth0},
+      eth1: {
+        dhcp4: false,
+        dhcp6: false,
+        addresses: ['10.0.0.1/20'],
+        gateway4: eth1_config.gateway,
+        nameservers: {
+          addresses: ['10.0.0.1', '8.8.8.8']
+        },
+        optional: true
+      }
+    }
+    expect(templates.generate(defaults, eth1_config).network.ethernets).to.eql(expected_ethernets)
   })
 
   it('it should set interface to dynmic ip', () => {

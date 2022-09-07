@@ -1,3 +1,5 @@
+var trim_ip_address = require('../helpers/trim_ip_address.js')
+
 exports.main = `
 hostname
 
@@ -23,12 +25,35 @@ static ip_address=[ADDRESS]/[PREFIX]
 [DNS]
 [NOARP]
 `
+exports.formatDNS = ns => {
+  if (!ns || (ns && !ns.length)) return '';
+
+  var dns_nameservers = 'static domain_name_servers=';
+  var r = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g
+
+  if (Array.isArray(ns)) {
+    var addresses = ns.reduce((result, item) => {
+      var addrs = item.match(r)
+      if (addrs && addrs.length) {
+        return result + ' ' + item.match(r).join(' ')
+      } else {
+        return result
+      }
+    }, '').trim()
+    return addresses ? dns_nameservers + addresses + '\n' : ''
+  } else if (typeof ns === 'string') {
+    var addresses = ns.match(r)
+    return addresses && addresses.length ? dns_nameservers + addresses.join(' ') + '\n' : ''
+  } else {
+    return ''
+  }
+}
 
 exports.generateStatic = (config) => {
   var is_vlan = typeof config.vlanid == 'number'
   var result = exports.static
     .replace(/\[INTERFACE\]/, config.interface + (is_vlan ? `.${config.vlanid}` : ''))
-    .replace(/\[ADDRESS\]/, config.ip_address)
+    .replace(/\[ADDRESS\]/, trim_ip_address(config.ip_address))
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
 
@@ -37,18 +62,8 @@ exports.generateStatic = (config) => {
   else
     result = result.replace(/\[NOARP]\n/, '')
 
-  config.nameservers = config.nameservers || []
-  if (config.nameservers.length) {
-    var dns = ''
-    config.nameservers.forEach(s => {
-      dns += ' ' + s
-    })
-    result = result.replace(/\[DNS\]/, 'static domain_name_servers='+ dns.trim())
-  } else
-    result = result.replace(/\[DNS\]\n/, '')
-
+  result = result.replace(/\[DNS\]\n/, exports.formatDNS(config.nameservers))
   return result
-
 }
 
 exports.generateConfig = (configs) => {
