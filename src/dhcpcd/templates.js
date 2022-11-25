@@ -53,7 +53,7 @@ exports.generateStatic = (config) => {
   var is_vlan = typeof config.vlanid == 'number'
   var result = exports.static
     .replace(/\[INTERFACE\]/, config.interface + (is_vlan ? `.${config.vlanid}` : ''))
-    .replace(/\[ADDRESS\]/, !config.manual ? trim_ip_address(config.ip_address) : '')
+    .replace(/\[ADDRESS\]/, trim_ip_address(config.ip_address))
     .replace(/\[PREFIX\]/, config.prefix)
     .replace(/\[GATEWAY\]\n/, config.gateway? 'static routers=' + config.gateway + '\n': '')
 
