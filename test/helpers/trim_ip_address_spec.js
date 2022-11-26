@@ -9,4 +9,7 @@ describe('helperes/trim_ip_address.js', () => {
     expect(trim_ip_address(' 10.0.0.1x')).to.eql('10.0.0.1')
     expect(trim_ip_address('x10.0.0.1x')).to.eql('10.0.0.1')
   })
+  it ('should return blank if ip is undefined', () => {
+    expect(trim_ip_address(undefined)).to.eql('')
+  })
 })
