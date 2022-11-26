@@ -1,3 +1,7 @@
+v1.2.2
+---
+  - (Fix up) `helpers/trim_ip_address.js` return empty string if undefined IP
+
 v1.2.1
 ---
   - Don't run restart networking service commands in parallel
@@ -39,7 +43,7 @@ v1.0.2
 v1.0.1
 ---
   - Fix error when vlan ifname > 15 characters
- 
+
 v1.0.0
 ---
   - Support for bridge interfaces
