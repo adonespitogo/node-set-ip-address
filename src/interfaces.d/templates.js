@@ -11,7 +11,6 @@ iface  [INTERFACE]  inet  static
 `
 exports.dhcp = `
 auto  [INTERFACE]
-allow-hotplug  [INTERFACE]
 iface  [INTERFACE]  inet  dhcp
 [VLAN]
 `
