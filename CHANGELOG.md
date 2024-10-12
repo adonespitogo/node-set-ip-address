@@ -1,3 +1,7 @@
+v1.2.3
+---
+  - Added `optional: true` to physical network interfaces included in bridge ports
+
 v1.2.2
 ---
   - (Fix up) `helpers/trim_ip_address.js` return empty string if undefined IP

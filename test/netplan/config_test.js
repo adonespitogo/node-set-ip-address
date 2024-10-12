@@ -113,7 +113,7 @@ describe('netplan', () => {
     }
 
     var expected_ethernets = {
-      eth0: {...eth0},
+      eth0: { ...eth0 },
       eth1: {
         dhcp4: false,
         dhcp6: false,
@@ -149,12 +149,12 @@ describe('netplan', () => {
     defaults.network.ethernets.eth0 = eth0
 
     var expected_ethernets = {
-      eth0: {...eth0},
+      eth0: { ...eth0 },
       eth1: {
         dhcp4: false,
         dhcp6: false,
         addresses: ['10.0.0.1/20'],
-        routes: [{to: 'default', via: eth1_config.gateway}],
+        routes: [{ to: 'default', via: eth1_config.gateway }],
         nameservers: {
           addresses: ['10.0.0.1', '8.8.8.8']
         },
@@ -188,8 +188,8 @@ describe('netplan', () => {
         ifname: 'eth0.0',
         interface: 'eth0',
         vlanid: 0,
-        dhcp:  true,
-        optional:  true
+        dhcp: true,
+        optional: true
       }
       var expected_vlans = {
         'eth0.0': {
@@ -197,7 +197,7 @@ describe('netplan', () => {
           link: 'eth0',
           dhcp4: true,
           'dhcp-identifier': 'mac',
-          optional:  true
+          optional: true
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
@@ -239,7 +239,7 @@ describe('netplan', () => {
           dhcp4: false,
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
-          routes: [{to: 'default', via: '20.0.0.1'}]
+          routes: [{ to: 'default', via: '20.0.0.1' }]
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
@@ -262,7 +262,7 @@ describe('netplan', () => {
           dhcp4: false,
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
-          routes: [{to: 'default', via: '20.0.0.1'}],
+          routes: [{ to: 'default', via: '20.0.0.1' }],
           nameservers: {
             addresses: ['1.1.1.1']
           }
@@ -290,7 +290,7 @@ describe('netplan', () => {
           dhcp4: false,
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
-          routes: [{to: 'default', via: '20.0.0.1'}],
+          routes: [{ to: 'default', via: '20.0.0.1' }],
           interfaces: ['eth0'],
           parameters: {
             stp: true
@@ -300,7 +300,7 @@ describe('netplan', () => {
       }
       var res = templates.generate(defaults, config)
       expect(res.network.ethernets).to.eql({
-        eth0: {dhcp4: false, dhcp6: false}
+        eth0: { dhcp4: false, dhcp6: false, optional: true }
       })
       expect(res.network.bridges).to.eql(expected_bridges)
     })
@@ -317,7 +317,7 @@ describe('netplan', () => {
         'eth0.10': {
           id: 10,
           link: 'eth0',
-          dhcp4: true
+          dhcp4: true,
         }
       }
       var expected_bridges = {
@@ -325,12 +325,13 @@ describe('netplan', () => {
           dhcp4: false,
           dhcp6: false,
           addresses: ['20.0.0.1/20'],
-          routes: [{to: 'default', via: '20.0.0.1'}],
+          routes: [{ to: 'default', via: '20.0.0.1' }],
           interfaces: ['eth0.10'],
-          parameters: {stp: false}
+          parameters: { stp: false }
         }
       }
       var res = templates.generate(defaults, config)
+
       expect(res.network.ethernets.eth0).to.be.undefined
       expect(res.network.vlans['eth0.10']).to.eql({
         id: 10,
