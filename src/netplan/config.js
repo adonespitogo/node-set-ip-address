@@ -4,7 +4,7 @@ var trim_ip_address = require('../helpers/trim_ip_address.js')
 
 exports.generate = (currentConfig, interfaceConfig) => {
   var iface = interfaceConfig.interface
-  var is_vlan = typeof interfaceConfig.vlanid == 'number'
+  var is_vlan = typeof interfaceConfig.vlanid === 'number'
   var cfg = {
     network: {
       version: 2,
@@ -37,15 +37,16 @@ exports.generate = (currentConfig, interfaceConfig) => {
           return result.concat(addrs)
         }, [])
         config.nameservers = { addresses }
-      } else {}
+      } else { }
     }
     // end dns config
     if (interfaceConfig.gateway)
-      config.routes = [{to: 'default', via: interfaceConfig.gateway}]
+      config.routes = [{ to: 'default', via: interfaceConfig.gateway }]
   } else {
     config.dhcp4 = true
     config['dhcp-identifier'] = 'mac'
   }
+
   if (!is_vlan) {
     if (Array.isArray(interfaceConfig.bridge_ports)) {
       interfaceConfig.bridge_opts = interfaceConfig.bridge_opts || {}
@@ -53,7 +54,8 @@ exports.generate = (currentConfig, interfaceConfig) => {
         if (!cfg.network.vlans[p]) {
           cfg.network.ethernets[p] = {
             dhcp4: false,
-            dhcp6: false
+            dhcp6: false,
+            optional: true
           }
         } else {
           var vlan = cfg.network.vlans[p]
@@ -61,7 +63,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
             id: vlan.id,
             link: vlan.link,
             dhcp4: false,
-            dhcp6: false
+            dhcp6: false,
           }
         }
       })
