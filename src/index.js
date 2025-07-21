@@ -61,7 +61,7 @@ exports.configure = async (configs) => {
       return ret;
     });
 
-  await netplan.configure(configs);
+  await netplan.configure(sorted);
 };
 
 exports.restartService = async () => {
