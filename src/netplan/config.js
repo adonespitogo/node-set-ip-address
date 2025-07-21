@@ -80,5 +80,16 @@ exports.generate = (currentConfig, interfaceConfig) => {
     cfg.network.vlans[interfaceConfig.ifname] = config
   }
 
+  if (interfaceConfig.manual) {
+    if (!is_vlan) {
+      config.manual = true
+    }
+    config.dhcp4 = false
+    config.dhcp6 = false
+    config.optional = true
+
+    delete config['dhcp-identifier']
+  }
+
   return cfg
 }

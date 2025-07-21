@@ -1,11 +1,6 @@
 'use strict'
 
-var sinon = require('sinon')
-var proxyquire = require('proxyquire')
 var { expect } = require('chai')
-var fs = require('fs')
-var assignDeep = require('assign-deep')
-var yaml = require('js-yaml')
 
 describe('netplan', () => {
 
@@ -266,6 +261,25 @@ describe('netplan', () => {
           nameservers: {
             addresses: ['1.1.1.1']
           }
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
+    it('should create vlan interface with manual option', () => {
+      var config = {
+        ifname: 'eth0.0',
+        interface: 'eth0',
+        vlanid: 0,
+        manual: true,
+      }
+      var expected_vlans = {
+        'eth0.0': {
+          id: 0,
+          link: 'eth0',
+          dhcp4: false,
+          dhcp6: false,
+          optional: true,
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
