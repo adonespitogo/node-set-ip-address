@@ -43,8 +43,11 @@ exports.generate = (currentConfig, interfaceConfig) => {
     if (interfaceConfig.gateway)
       config.routes = [{ to: 'default', via: interfaceConfig.gateway }]
   } else {
-    config.dhcp4 = true
-    config['dhcp-identifier'] = 'mac'
+    config.dhcp4 = !interfaceConfig.manual && !!interfaceConfig.dhcp
+    config.dhcp6 = config.dhcp4
+    if (interfaceConfig.dhcp) {
+      config['dhcp-identifier'] = 'mac'
+    }
   }
 
   if (!is_vlan) {
@@ -77,6 +80,10 @@ exports.generate = (currentConfig, interfaceConfig) => {
   } else {
     config.id = interfaceConfig.vlanid
     config.link = iface
+    if (interfaceConfig.optional) {
+      config.optional = true
+    }
+
     cfg.network.vlans[interfaceConfig.ifname] = config
   }
 
