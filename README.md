@@ -100,7 +100,9 @@ var br0 = {
   nameservers: ['8.8.8.8'],
   bridge_ports: ['eth0', 'eth0.10'],
   bridge_opts: {
-    stp: true
+      parameters: {
+          stp: true
+      }
   }
 }
 

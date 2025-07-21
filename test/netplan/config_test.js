@@ -282,8 +282,8 @@ describe('netplan', () => {
         prefix: 20,
         gateway: '20.0.0.1',
         bridge_ports: ['eth0'],
-        bridge_opts: { stp: true },
-        optional: true
+        bridge_opts: { parameters: { stp: true } },
+        optional: true,
       }
       var expected_bridges = {
         'br0': {
@@ -311,7 +311,10 @@ describe('netplan', () => {
         ip_address: '20.0.0.1',
         prefix: 20,
         gateway: '20.0.0.1',
-        bridge_ports: ['eth0.10']
+        bridge_ports: ['eth0.10'],
+        bridge_opts: {
+          parameters: { stp: false, forward_delay: 0 },
+        }
       }
       defaults.network.vlans = {
         'eth0.10': {
@@ -327,7 +330,7 @@ describe('netplan', () => {
           addresses: ['20.0.0.1/20'],
           routes: [{ to: 'default', via: '20.0.0.1' }],
           interfaces: ['eth0.10'],
-          parameters: { stp: false }
+          parameters: { stp: false, forward_delay: 0 },
         }
       }
       var res = templates.generate(defaults, config)
@@ -338,6 +341,7 @@ describe('netplan', () => {
         link: 'eth0',
         dhcp4: false,
         dhcp6: false,
+        optional: true
       })
       expect(res.network.bridges).to.eql(expected_bridges)
     })

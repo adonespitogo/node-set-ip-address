@@ -64,13 +64,13 @@ exports.generate = (currentConfig, interfaceConfig) => {
             link: vlan.link,
             dhcp4: false,
             dhcp6: false,
+            optional: true,
           }
         }
       })
-      var opts = interfaceConfig.bridge_opts
-      var { stp } = opts
+      var { parameters } = interfaceConfig.bridge_opts
       config.interfaces = interfaceConfig.bridge_ports
-      config.parameters = { stp: !!stp }
+      config.parameters = parameters || {}
       cfg.network.bridges[iface] = config
     } else if (!interfaceConfig.ppp)
       cfg.network.ethernets[iface] = config

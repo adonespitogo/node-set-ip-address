@@ -1,6 +1,7 @@
 v2.0.0
 ---
   - Removed support for `ifdownup` and `dhcpcd`. Only `netplan` is supported now.
+  - Removed stp option for bridged interfaces, use `parameters` instead.
 
 v1.2.3
 ---
