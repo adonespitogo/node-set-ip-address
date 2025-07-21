@@ -71,8 +71,7 @@ exports.restartService = async () => {
   var error = null;
   var network_service_restarted = false;
 
-  await execPromise("netplan try")
-    .then(() => execPromise("netplan apply"))
+  await execPromise("netplan apply")
     .then(() => (network_service_restarted = true))
     .catch((e) => {
       console.log(e);
