@@ -1,3 +1,7 @@
+v2.0.0
+---
+  - Removed support for `ifdownup` and `dhcpcd`. Only `netplan` is supported now.
+
 v1.2.3
 ---
   - Added `optional: true` to physical network interfaces included in bridge ports
@@ -38,7 +42,7 @@ v1.0.4-8
 
 v1.0.3
 ---
-  - Update package dependencies and fix vulnerabilites with `npm audit fix`
+  - Update package dependencies and fix vulnerabilities with `npm audit fix`
 
 v1.0.2
 ---
