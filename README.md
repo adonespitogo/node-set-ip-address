@@ -4,10 +4,8 @@ Node module for setting up network interface(s) ip address, dns, and default rou
 [![Build Status](https://travis-ci.com/adonespitogo/node-set-ip-address.svg?branch=master)](https://travis-ci.com/adonespitogo/node-set-ip-address)
 
 Supported linux network configurations:
- - dhcpcd (/etc/dhcpcd.conf)
- - ifdownup (/etc/network/interfaces)
  - netplan (/etc/netplan/)
- 
+
 Install
 ---
 
@@ -102,7 +100,9 @@ var br0 = {
   nameservers: ['8.8.8.8'],
   bridge_ports: ['eth0', 'eth0.10'],
   bridge_opts: {
-    stp: true
+      parameters: {
+          stp: true
+      }
   }
 }
 

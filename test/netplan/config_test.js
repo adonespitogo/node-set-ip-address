@@ -1,11 +1,6 @@
 'use strict'
 
-var sinon = require('sinon')
-var proxyquire = require('proxyquire')
 var { expect } = require('chai')
-var fs = require('fs')
-var assignDeep = require('assign-deep')
-var yaml = require('js-yaml')
 
 describe('netplan', () => {
 
@@ -174,8 +169,9 @@ describe('netplan', () => {
     var expected_ethernets = {
       eth1: {
         dhcp4: true,
+        dhcp6: true,
+        optional: true,
         'dhcp-identifier': 'mac',
-        optional: true
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
@@ -196,8 +192,9 @@ describe('netplan', () => {
           id: 0,
           link: 'eth0',
           dhcp4: true,
+          dhcp6: true,
+          optional: true,
           'dhcp-identifier': 'mac',
-          optional: true
         }
       }
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
@@ -271,6 +268,26 @@ describe('netplan', () => {
       expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
     })
 
+    it('should create vlan interface with default options', () => {
+      var config = {
+        ifname: 'eth0.0',
+        interface: 'eth0',
+        vlanid: 0,
+        optional: true,
+        dhcp: false,
+      }
+      var expected_vlans = {
+        'eth0.0': {
+          id: 0,
+          link: 'eth0',
+          dhcp4: false,
+          dhcp6: false,
+          optional: true,
+        }
+      }
+      expect(templates.generate(defaults, config).network.vlans).to.eql(expected_vlans)
+    })
+
   })
 
   describe('bridged support', () => {
@@ -282,8 +299,8 @@ describe('netplan', () => {
         prefix: 20,
         gateway: '20.0.0.1',
         bridge_ports: ['eth0'],
-        bridge_opts: { stp: true },
-        optional: true
+        bridge_opts: { parameters: { stp: true } },
+        optional: true,
       }
       var expected_bridges = {
         'br0': {
@@ -311,7 +328,10 @@ describe('netplan', () => {
         ip_address: '20.0.0.1',
         prefix: 20,
         gateway: '20.0.0.1',
-        bridge_ports: ['eth0.10']
+        bridge_ports: ['eth0.10'],
+        bridge_opts: {
+          parameters: { stp: false, forward_delay: 0 },
+        }
       }
       defaults.network.vlans = {
         'eth0.10': {
@@ -327,7 +347,7 @@ describe('netplan', () => {
           addresses: ['20.0.0.1/20'],
           routes: [{ to: 'default', via: '20.0.0.1' }],
           interfaces: ['eth0.10'],
-          parameters: { stp: false }
+          parameters: { stp: false, forward_delay: 0 },
         }
       }
       var res = templates.generate(defaults, config)
@@ -338,6 +358,7 @@ describe('netplan', () => {
         link: 'eth0',
         dhcp4: false,
         dhcp6: false,
+        optional: true
       })
       expect(res.network.bridges).to.eql(expected_bridges)
     })

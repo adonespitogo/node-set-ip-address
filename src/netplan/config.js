@@ -43,8 +43,11 @@ exports.generate = (currentConfig, interfaceConfig) => {
     if (interfaceConfig.gateway)
       config.routes = [{ to: 'default', via: interfaceConfig.gateway }]
   } else {
-    config.dhcp4 = true
-    config['dhcp-identifier'] = 'mac'
+    config.dhcp4 = !!interfaceConfig.dhcp
+    config.dhcp6 = config.dhcp4
+    if (interfaceConfig.dhcp) {
+      config['dhcp-identifier'] = 'mac'
+    }
   }
 
   if (!is_vlan) {
@@ -64,19 +67,23 @@ exports.generate = (currentConfig, interfaceConfig) => {
             link: vlan.link,
             dhcp4: false,
             dhcp6: false,
+            optional: true,
           }
         }
       })
-      var opts = interfaceConfig.bridge_opts
-      var { stp } = opts
+      var { parameters } = interfaceConfig.bridge_opts
       config.interfaces = interfaceConfig.bridge_ports
-      config.parameters = { stp: !!stp }
+      config.parameters = parameters || {}
       cfg.network.bridges[iface] = config
     } else if (!interfaceConfig.ppp)
       cfg.network.ethernets[iface] = config
   } else {
     config.id = interfaceConfig.vlanid
     config.link = iface
+    if (interfaceConfig.optional) {
+      config.optional = true
+    }
+
     cfg.network.vlans[interfaceConfig.ifname] = config
   }
 

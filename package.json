@@ -1,6 +1,6 @@
 {
-  "name": "set-ip-address",
-  "version": "1.2.3",
+  "name": "@adopisoft/netplan",
+  "version": "2.0.0",
   "description": "Node module for setting up network interface(s) ip address.",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,6 @@
   "dependencies": {
     "js-yaml": "^3.13.1",
     "make-dir": "^3.0.0",
-    "netmask": "^2.0.2",
-    "promise.series": "^0.2.0"
+    "netmask": "^2.0.2"
   }
 }
