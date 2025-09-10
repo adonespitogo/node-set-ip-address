@@ -1,3 +1,7 @@
+v2.0.1
+---
+  - Support `match` option for netplan
+
 v2.0.0
 ---
   - Removed support for `ifdownup` and `dhcpcd`. Only `netplan` is supported now.
