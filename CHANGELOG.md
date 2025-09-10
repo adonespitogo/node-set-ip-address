@@ -1,3 +1,7 @@
+v2.0.2
+---
+  - Fix match option of interface not retained if it is a member of a bridge.
+
 v2.0.1
 ---
   - Support `match` option for netplan
