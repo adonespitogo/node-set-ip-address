@@ -19,6 +19,9 @@ exports.generate = (currentConfig, interfaceConfig) => {
   if (interfaceConfig.optional)
     config.optional = true
 
+  if (interfaceConfig.match)
+    config.match = interfaceConfig.match
+
   if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
     config.dhcp4 = false
     config.dhcp6 = false

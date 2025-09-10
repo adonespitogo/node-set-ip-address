@@ -34,7 +34,10 @@ var eth0 = {
   prefix: 20,
   gateway: '10.0.0.1',
   nameservers: ['8.8.8.8'], // nameservers can also be a string separated by space/comma, ex: `"1.1.1.1, 8.8.8.8 8.8.4.4"`
-  optional: true // (netplan) - dont wait for interfaces to avoid boot delay
+  optional: true,           // dont wait for interfaces to avoid boot delay
+  match: {                  // netplan match option
+      name: 'eth0'
+  }
 }
 
 var eth1 {

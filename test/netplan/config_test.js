@@ -31,7 +31,10 @@ describe('netplan', () => {
       ip_address: '10.0.0.1 ',
       prefix: 20,
       nameservers: ['10.0.0.1'],
-      optional: true
+      optional: true,
+      match: {
+        macaddress: 'xxx'
+      }
     }
     var expected_ethernets = {
       eth0: {
@@ -41,7 +44,10 @@ describe('netplan', () => {
         nameservers: {
           addresses: config.nameservers
         },
-        optional: true
+        optional: true,
+        match: {
+          macaddress: 'xxx'
+        }
       }
     }
     expect(templates.generate(defaults, config).network.ethernets).to.eql(expected_ethernets)
