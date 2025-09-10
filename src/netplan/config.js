@@ -1,94 +1,98 @@
-'use strict'
+"use strict";
 
-var trim_ip_address = require('../helpers/trim_ip_address.js')
+var trim_ip_address = require("../helpers/trim_ip_address.js");
 
 exports.generate = (currentConfig, interfaceConfig) => {
-  var iface = interfaceConfig.interface
-  var is_vlan = typeof interfaceConfig.vlanid === 'number'
+  var iface = interfaceConfig.interface;
+  var is_vlan = typeof interfaceConfig.vlanid === "number";
   var cfg = {
     network: {
       version: 2,
-      renderer: 'networkd',
+      renderer: "networkd",
       ethernets: currentConfig.network.ethernets || {},
       vlans: currentConfig.network.vlans || {},
       bridges: currentConfig.network.bridges || {},
-    }
-  }
-  var config = {}
+    },
+  };
+  var config = {};
 
-  if (interfaceConfig.optional)
-    config.optional = true
+  if (interfaceConfig.optional) config.optional = true;
 
-  if (interfaceConfig.match)
-    config.match = interfaceConfig.match
+  if (interfaceConfig.match) config.match = interfaceConfig.match;
 
   if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
-    config.dhcp4 = false
-    config.dhcp6 = false
-    config.addresses = [trim_ip_address(interfaceConfig.ip_address) + '/' + interfaceConfig.prefix]
+    config.dhcp4 = false;
+    config.dhcp6 = false;
+    config.addresses = [
+      trim_ip_address(interfaceConfig.ip_address) +
+        "/" +
+        interfaceConfig.prefix,
+    ];
 
     // dns nameservers
     if (interfaceConfig.nameservers) {
-      var ns = interfaceConfig.nameservers
-      var r = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g
-      if (typeof ns === 'string') {
-        var addresses = ns.match(r)
-        config.nameservers = { addresses }
+      var ns = interfaceConfig.nameservers;
+      var r = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g;
+      if (typeof ns === "string") {
+        var addresses = ns.match(r);
+        config.nameservers = { addresses };
       } else if (Array.isArray(interfaceConfig.nameservers)) {
         var addresses = interfaceConfig.nameservers.reduce((result, item) => {
-          var addrs = item.match(r)
-          return result.concat(addrs)
-        }, [])
-        config.nameservers = { addresses }
-      } else { }
+          var addrs = item.match(r);
+          return result.concat(addrs);
+        }, []);
+        config.nameservers = { addresses };
+      } else {
+      }
     }
     // end dns config
     if (interfaceConfig.gateway)
-      config.routes = [{ to: 'default', via: interfaceConfig.gateway }]
+      config.routes = [{ to: "default", via: interfaceConfig.gateway }];
   } else {
-    config.dhcp4 = !!interfaceConfig.dhcp
-    config.dhcp6 = config.dhcp4
+    config.dhcp4 = !!interfaceConfig.dhcp;
+    config.dhcp6 = config.dhcp4;
     if (interfaceConfig.dhcp) {
-      config['dhcp-identifier'] = 'mac'
+      config["dhcp-identifier"] = "mac";
     }
   }
 
   if (!is_vlan) {
     if (Array.isArray(interfaceConfig.bridge_ports)) {
-      interfaceConfig.bridge_opts = interfaceConfig.bridge_opts || {}
-      interfaceConfig.bridge_ports.forEach(p => {
+      interfaceConfig.bridge_opts = interfaceConfig.bridge_opts || {};
+      interfaceConfig.bridge_ports.forEach((p) => {
         if (!cfg.network.vlans[p]) {
-          cfg.network.ethernets[p] = {
+          var prev = cfg.network.ethernets[p] || {};
+          cfg.network.ethernets[p] = Object.assign(prev, {
             dhcp4: false,
             dhcp6: false,
-            optional: true
-          }
+            optional: true,
+          });
         } else {
-          var vlan = cfg.network.vlans[p]
-          cfg.network.vlans[p] = {
+          var vlan = cfg.network.vlans[p];
+          var prev = cfg.network.vlans[p] || {};
+          cfg.network.vlans[p] = Object.assign(prev, {
             id: vlan.id,
             link: vlan.link,
             dhcp4: false,
             dhcp6: false,
             optional: true,
-          }
+          });
         }
-      })
-      var { parameters } = interfaceConfig.bridge_opts
-      config.interfaces = interfaceConfig.bridge_ports
-      config.parameters = parameters || {}
-      cfg.network.bridges[iface] = config
-    } else if (!interfaceConfig.ppp)
-      cfg.network.ethernets[iface] = config
+      });
+      var { parameters } = interfaceConfig.bridge_opts;
+      config.interfaces = interfaceConfig.bridge_ports;
+      config.parameters = parameters || {};
+      cfg.network.bridges[iface] = config;
+    } else if (!interfaceConfig.ppp) cfg.network.ethernets[iface] = config;
   } else {
-    config.id = interfaceConfig.vlanid
-    config.link = iface
+    config.id = interfaceConfig.vlanid;
+    config.link = iface;
     if (interfaceConfig.optional) {
-      config.optional = true
+      config.optional = true;
     }
 
-    cfg.network.vlans[interfaceConfig.ifname] = config
+    cfg.network.vlans[interfaceConfig.ifname] = config;
   }
 
-  return cfg
-}
+  return cfg;
+};
