@@ -344,6 +344,49 @@ describe("netplan", () => {
       expect(res.network.bridges).to.eql(expected_bridges);
     });
 
+    it("should create bridge interfaces with ethernets", () => {
+      var config = {
+        interface: "br0",
+        ip_address: "20.0.0.1",
+        prefix: 20,
+        gateway: "20.0.0.1",
+        bridge_ports: ["eth0"],
+        bridge_opts: {
+          parameters: { stp: false, forward_delay: 0 },
+        },
+      };
+      defaults.network.ethernets = {
+        eth0: {
+          dhcp4: true,
+          match: {
+            macaddress: "xxx",
+          },
+        },
+      };
+      var expected_bridges = {
+        br0: {
+          dhcp4: false,
+          dhcp6: false,
+          addresses: ["20.0.0.1/20"],
+          routes: [{ to: "default", via: "20.0.0.1" }],
+          interfaces: ["eth0"],
+          parameters: { stp: false, forward_delay: 0 },
+        },
+      };
+      var res = templates.generate(defaults, config);
+
+      // expect(res.network.ethernets.eth0).to.be.undefined;
+      expect(res.network.ethernets["eth0"]).to.eql({
+        dhcp4: false,
+        dhcp6: false,
+        optional: true,
+        match: {
+          macaddress: "xxx",
+        },
+      });
+      expect(res.network.bridges).to.eql(expected_bridges);
+    });
+
     it("should create bridge interfaces with vlan", () => {
       var config = {
         interface: "br0",
@@ -360,9 +403,6 @@ describe("netplan", () => {
           id: 10,
           link: "eth0",
           dhcp4: true,
-          match: {
-            macaddress: "xxx",
-          },
         },
       };
       var expected_bridges = {
@@ -384,9 +424,6 @@ describe("netplan", () => {
         dhcp4: false,
         dhcp6: false,
         optional: true,
-        match: {
-          macaddress: "xxx",
-        },
       });
       expect(res.network.bridges).to.eql(expected_bridges);
     });

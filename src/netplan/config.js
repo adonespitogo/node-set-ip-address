@@ -60,19 +60,28 @@ exports.generate = (currentConfig, interfaceConfig) => {
     if (Array.isArray(interfaceConfig.bridge_ports)) {
       interfaceConfig.bridge_opts = interfaceConfig.bridge_opts || {};
       interfaceConfig.bridge_ports.forEach((p) => {
-        if (!cfg.network.vlans[p]) {
-          var prev = cfg.network.ethernets[p] || {};
-          cfg.network.ethernets[p] = Object.assign(prev, {
+        if (cfg.network.vlans[p]) {
+          var vlan = cfg.network.vlans[p];
+          cfg.network.vlans[p] = {
+            id: vlan.id,
+            link: vlan.link,
             dhcp4: false,
             dhcp6: false,
             optional: true,
-          });
+          };
         } else {
-          var vlan = cfg.network.vlans[p];
-          var prev = cfg.network.vlans[p] || {};
-          cfg.network.vlans[p] = Object.assign(prev, {
-            id: vlan.id,
-            link: vlan.link,
+          var prev = cfg.network.ethernets[p];
+          var prevcfg = {};
+
+          if (prev) {
+            var to_retain = ["match"];
+            for (var k of to_retain) {
+              if (prev[k]) {
+                prevcfg[k] = prev[k];
+              }
+            }
+          }
+          cfg.network.ethernets[p] = Object.assign(prevcfg, {
             dhcp4: false,
             dhcp6: false,
             optional: true,
