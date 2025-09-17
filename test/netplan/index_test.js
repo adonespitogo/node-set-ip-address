@@ -13,14 +13,15 @@ describe('netplan', () => {
     dump_ouput,
     fs,
     filename,
+    child_process,
     ensureDir
 
   beforeEach(() => {
     ensureDir = sinon.fake.resolves()
     cfg_yaml = 'some config'
     dump_ouput = 'some yaml output'
-    yaml = {safeDump: sinon.fake(() => dump_ouput)}
-    config = {generate: sinon.fake.returns(cfg_yaml)}
+    yaml = { safeDump: sinon.fake(() => dump_ouput) }
+    config = { generate: sinon.fake.returns(cfg_yaml) }
     filename = 'some file'
     fs = {
       readdir: sinon.fake((dir, cb) => cb(null, [filename])),
@@ -28,8 +29,18 @@ describe('netplan', () => {
         cb()
       })
     }
+    child_process = {
+      exec: sinon.fake((cmd, opts, cb) => {
+        if (typeof opts == 'function') {
+          cb = opts
+        }
+        cb()
+      })
+    }
+
     netplan = proxyquire('../../src/netplan/index.js', {
       fs,
+      child_process,
       'make-dir': ensureDir,
       'js-yaml': yaml,
       './config': config
@@ -85,9 +96,11 @@ describe('netplan', () => {
     it('should write config to /etc/netplan', async () => {
       await netplan.writeConfig()
       sinon.assert.calledWithExactly(ensureDir, '/etc/netplan')
-      sinon.assert.calledWithExactly(yaml.safeDump, netplan.cfg_stack, {noCompatMode: true})
+      sinon.assert.calledWithExactly(yaml.safeDump, netplan.cfg_stack, { noCompatMode: true })
       expect(fs.writeFile.lastCall.args[0]).to.equal('/etc/netplan/' + filename)
       expect(fs.writeFile.lastCall.args[1]).to.equal(dump_ouput)
+      expect(fs.writeFile.lastCall.args[1]).to.equal(dump_ouput)
+      expect(child_process.exec.lastCall.args[0]).to.equal(`chmod 600 /etc/netplan/${filename}`)
     })
 
   })
@@ -109,8 +122,8 @@ describe('netplan', () => {
           vlans: ['some vlans']
         }
       }
-      var eth0 = {interface: 'eth0', ip_address: '10.0.0.1'}
-      var eth1 = {interface: 'eth1', ip_address: '10.0.0.1'}
+      var eth0 = { interface: 'eth0', ip_address: '10.0.0.1' }
+      var eth1 = { interface: 'eth1', ip_address: '10.0.0.1' }
       var configs = [eth0, eth1]
       await netplan.configure(configs)
       expect(set_interface_stub.firstCall.args).to.eql([eth0])

@@ -1,3 +1,7 @@
+v2.0.3
+---
+  - Change netplan config file permission to 600
+
 v2.0.2
 ---
   - Fix match option of interface not retained if it is a member of a bridge.
