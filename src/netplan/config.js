@@ -25,8 +25,8 @@ exports.generate = (currentConfig, interfaceConfig) => {
     config.dhcp6 = false;
     config.addresses = [
       trim_ip_address(interfaceConfig.ip_address) +
-        "/" +
-        interfaceConfig.prefix,
+      "/" +
+      interfaceConfig.prefix,
     ];
 
     // dns nameservers
